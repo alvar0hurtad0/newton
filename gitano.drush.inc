@@ -17,6 +17,11 @@ function gitano_drush_command(){
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
+  $items['gitano'] = array(
+    'description' => 'updates GITANO to the last version',
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
+
   return $items;
 }
 
@@ -40,6 +45,18 @@ function drush_gitano_traepaca($number = NULL) {
   drush_shell_exec_interactive("drush cc all");
   drush_shell_exec_interactive("drush vset preprocess_css 0 --yes");
 
+  foreach (drush_shell_exec_output() as $line) {
+  	$out .=$line."\n\r"; 
+  }
+  return $out;
+}
+
+/**
+ * gitano command callback
+ */
+function drush_gitano_gitano($number = NULL) {
+  $result = drush_shell_exec("cd ~/.drush/gitano");
+  drush_shell_exec_interactive("git pull");
   foreach (drush_shell_exec_output() as $line) {
   	$out .=$line."\n\r"; 
   }
