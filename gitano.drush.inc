@@ -54,7 +54,7 @@ function drush_gitano_traepaca($number = NULL) {
 /**
  * gitano command callback
  */
-function drush_gitano_gitano($number = NULL) {
+function drush_gitano() {
   $result = drush_shell_exec("cd ~/.drush/gitano");
   drush_shell_exec_interactive("git pull");
   foreach (drush_shell_exec_output() as $line) {
