@@ -17,7 +17,7 @@ function gitano_drush_command(){
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-  $items['gitano'] = array(
+  $items['gitanoupdate'] = array(
     'description' => 'updates GITANO to the last version',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
@@ -55,9 +55,9 @@ function drush_gitano_traepaca($number = NULL) {
 }
 
 /**
- * gitano command callback
+ * gitanoupdate command callback
  */
-function drush_gitano() {
+function drush_gitano_gitanoupdate() {
   drush_shell_exec("cd ~/.drush/gitano");
   drush_shell_exec_interactive("git pull");
   drush_shell_exec("drush cc drush");
