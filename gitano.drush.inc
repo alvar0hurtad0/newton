@@ -25,6 +25,10 @@ function gitano_drush_command(){
     'description' => 'init a project installing modules, enviroments and repository',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
+  $items['join2project'] = array(
+    'description' => 'ask about cuestions for joining existing project',
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
   return $items;
 }
 
@@ -43,13 +47,28 @@ function drush_gitano_capasao($number = NULL) {
  * traepaca command callback
  */
 function drush_gitano_traepaca($number = NULL) {
-  drush_shell_exec_interactive("drush sql-sync @default.pro default");
-  drush_shell_exec_interactive("drush rsync @default.pro:sites/default/files default:sites/default/files");
+  drush_shell_exec_interactive("drush sql-sync @default.pre default");
+  drush_shell_exec_interactive("drush rsync @default.pre:sites/default/files default:sites/default/files");
   drush_shell_exec_interactive("drush cc all");
   drush_shell_exec_interactive("drush vset preprocess_css 0 --yes");
 
   foreach (drush_shell_exec_output() as $line) {
   	$out .=$line."\n\r"; 
+  }
+  return $out;
+}
+
+/**
+ * traepaca command callback
+ */
+function drush_gitano_tirapapre($number = NULL) {
+  drush_shell_exec_interactive("drush sql-sync @default.pro @default.pre");
+  drush_shell_exec_interactive("drush rsync @default.pro:sites/default/files @default.pre:sites/default/files");
+  drush_shell_exec_interactive("drush @default.pre cc all");
+  drush_shell_exec_interactive("drush @default.pre vset preprocess_css 0 --yes");
+
+  foreach (drush_shell_exec_output() as $line) {
+    $out .=$line."\n\r"; 
   }
   return $out;
 }
@@ -120,4 +139,31 @@ function drush_gitano_init() {
   drush_shell_exec('echo " )," >> '.$project_name.'/sites/all/drush/default.aliases.drushrc.php');
 
 
+}
+
+/**
+ * join2project command callback
+ */
+function drush_gitano_join2project() {
+  $git_repository = drush_prompt("What's the URL of remote git repository");
+  if ($git_repository ==''){
+    return "OMG, if there's no repository there's no project";
+  }
+
+  print ('I am cloning the repository into your machine, it can take a bit of time');
+  drush_shell_exec_interactive('git clone '.$git_repository);
+  $project_name = drush_prompt("What's the directory name");
+
+  $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
+
+  print ('Now enter some parameters for the development site, please\n\r');
+  $admin_pass = $random;
+  $site_name = ('unnamed');
+  $site_email = 'my@example.com';
+  $database_user = drush_prompt("Database user for THIS project (directory name if blank)",$project_name);
+  $database_user_pw = drush_prompt("Database user PASSWORD for this project (secret password if blank)",$random);
+  $database_root = drush_prompt("Database super-user (root if blank)",'root');
+  $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
+  
+  drush_shell_exec_interactive("cd $project_name && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
 }
