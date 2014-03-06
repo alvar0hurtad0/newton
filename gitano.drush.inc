@@ -24,8 +24,8 @@ function gitano_drush_command(){
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-  $items['gitanoupdate'] = array(
-    'description' => 'updates GITANO to the last version',
+  $items['newton'] = array(
+    'description' => 'updates NEWTON to the last version',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
   $items['init'] = array(
@@ -86,10 +86,10 @@ function drush_gitano_tirapapre($number = NULL) {
 }
 
 /**
- * gitanoupdate command callback
+ * newtonupdate command callback
  */
-function drush_gitano_gitanoupdate() {
-  drush_shell_exec("cd ~/.drush/gitano && git pull");
+function drush_gitano_newtonupdate() {
+  drush_shell_exec("cd ~/.drush/newton && git pull");
   drush_shell_exec("drush cc drush");
   foreach (drush_shell_exec_output() as $line) {
   	$out .=$line."\n\r"; 
