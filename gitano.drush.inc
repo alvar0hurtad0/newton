@@ -4,7 +4,7 @@
  */
 function gitano_drush_command(){
   $items['capasao'] = array(
-    'description' => 'Shows a git log --oneline --graph --reverse',
+    'description' => 'Shows a git log --reverse --oneline --graph',
     'examples' => array(
       'drush capasao' => 'shows de log',                                                 
     ),
@@ -52,8 +52,8 @@ function gitano_drush_command(){
  * capasao command callback
  */
 function drush_gitano_capasao($number = NULL) {
-  $result = drush_shell_exec("git log --oneline --graph --color --decorate");
-  foreach (drush_shell_exec_output() as $line) {
+ $result = drush_shell_exec("git log --graph --color --decorate | more");
+ foreach (drush_shell_exec_output() as $line) {
   	$out .=$line."\n\r"; 
   }
   return $out;
