@@ -4,7 +4,7 @@
  */
 function gitano_drush_command(){
   $items['capasao'] = array(
-    'description' => 'Shows a git log --oneline --graph',
+    'description' => 'Shows a git log --oneline --graph --reverse',
     'examples' => array(
       'drush capasao' => 'shows de log',                                                 
     ),
