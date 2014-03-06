@@ -39,6 +39,10 @@ function gitano_drush_command(){
 
   $items['deploy'] = array(
     'description' => 'ask about cuestions for joining existing project',
+    'arguments' => array(
+      'enviroment' => 'The enviroment indicator',
+    ),
+    'required-arguments' => FALSE,
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
   return $items;
@@ -182,6 +186,12 @@ function drush_gitano_enviromentadd(){
 
 }
 
-function drush_gitano_deploy(){
-  drush_shell_exec_interactive('drush @default.pro ssh "git pull"');
+function drush_gitano_deploy($enviroment='pre'){
+  switch ($enviroment){
+    case 'pre':
+      drush_shell_exec_interactive('drush @default.pre ssh "git pull"');
+    break;
+    case 'pro':
+    drush_shell_exec_interactive('drush @default.pro ssh "git pull"');
+  }
 }
