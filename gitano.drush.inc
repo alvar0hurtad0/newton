@@ -182,8 +182,7 @@ function drush_gitano_enviromentadd(){
 
 
 }
+
 function drush_gitano_deploy(){
   drush_shell_exec_interactive('drush @default.pro ssh "git pull"');
-
-
 }
