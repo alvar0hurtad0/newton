@@ -89,8 +89,7 @@ function drush_gitano_tirapapre($number = NULL) {
  * gitanoupdate command callback
  */
 function drush_gitano_gitanoupdate() {
-  drush_shell_exec("cd ~/.drush/gitano");
-  drush_shell_exec_interactive("git pull");
+  drush_shell_exec("cd ~/.drush/gitano && git pull");
   drush_shell_exec("drush cc drush");
   foreach (drush_shell_exec_output() as $line) {
   	$out .=$line."\n\r"; 
