@@ -24,7 +24,7 @@ function gitano_drush_command(){
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-  $items['newton'] = array(
+  $items['newtonupdate'] = array(
     'description' => 'updates NEWTON to the last version',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
