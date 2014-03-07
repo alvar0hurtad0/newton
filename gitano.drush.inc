@@ -45,6 +45,20 @@ function gitano_drush_command(){
     'required-arguments' => FALSE,
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
+  $items['n-revert'] = array(
+    'description' => 'shows all overriden features on the portal and ask about revert then',
+    'arguments' => array(
+      'enviroment' => 'The enviroment indicator',
+    ),
+    'required-arguments' => FALSE,
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
+  $items['n-serialized-features'] = array(
+    'description' => 'shows all overriden features on the portal and ask about revert then',
+    'required-arguments' => FALSE,
+    'drupal dependencies' => array('features'),
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
   return $items;
 }
 
@@ -193,5 +207,58 @@ function drush_gitano_deploy($enviroment='pre'){
     break;
     case 'pro':
     drush_shell_exec_interactive('drush @default.pro ssh "git pull"');
+  }
+}
+
+function drush_gitano_n_revert($enviroment=''){
+  switch ($enviroment){
+    case 'pre':
+      drush_shell_exec('drush @default.pre drush features');
+    break;
+    case 'pro':
+    drush_shell_exec('drush @default.pro features');
+    break;
+    default:
+    drush_shell_exec('drush features');
+  }
+  $cont=0;
+  $features = array();
+  $starts= array();
+
+  $lastchar=' ';
+  foreach (drush_shell_exec_output() as $line) {
+    if ($cont == 0){
+      $header = str_split($line);
+      for ($i=0;$i < sizeof($header);$i++){
+        if (($header[$i] !=' ') && ($lastchar == ' ')){
+          $starts[]=$i; 
+        }
+        $lastchar=$header[$i];
+      }
+    }
+    
+    if($cont<10){
+        $out =' '.$cont.' - '.$line."\n\r";
+      }else{
+        $out =$cont.' - '.$line."\n\r";
+      }
+    $cont ++;
+    $featurename = substr($line, $starts[1], $starts[2]-$starts[1]);
+    $features[]= trim($featurename);
+    printf($out);
+  }
+
+  $option = drush_prompt("Enter the name of the feature to revert, please (0 to cancel)",'0',FALSE);
+  if($option > 0){
+    switch ($enviroment){
+      case 'pre':
+        drush_shell_exec_interactive('drush @default.pre fr '.$features[$option]);
+      break;
+      case 'pro':
+      drush_shell_exec_interactive('drush @default.pro fr '.$features[$option]);
+      break;
+      default:
+      drush_shell_exec_interactive('drush  fr '.$features[$option]);
+    }
   }
 }
