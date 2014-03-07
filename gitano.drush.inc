@@ -214,7 +214,7 @@ function drush_gitano_n_revert($enviroment=''){
   print('Looking for features, it can take some seconds... \n\r');
   switch ($enviroment){
     case 'pre':
-      drush_shell_exec('drush @default.pre drush features --status=enabled');
+      drush_shell_exec('drush @default.pre features --status=enabled');
     break;
     case 'pro':
     drush_shell_exec('drush @default.pro features --status=enabled');
