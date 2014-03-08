@@ -66,11 +66,7 @@ function gitano_drush_command(){
  * capasao command callback
  */
 function drush_gitano_capasao($number = NULL) {
- $result = drush_shell_exec("git log --graph --color --decorate | more");
- foreach (drush_shell_exec_output() as $line) {
-  	$out .=$line."\n\r"; 
-  }
-  return $out;
+ drush_shell_exec_interactive("git log --graph --color --decorate");
 }
 
 /**
