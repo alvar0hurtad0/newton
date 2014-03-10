@@ -3,6 +3,10 @@
  * Implementation of hook_drush_command().
  */
 function gitano_drush_command(){
+  $items['newton'] = array(
+    'description' => 'Shows all newton commands',
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
   $items['capasao'] = array(
     'description' => 'Shows a git log --reverse --oneline --graph',
     'examples' => array(
@@ -60,6 +64,19 @@ function gitano_drush_command(){
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
   return $items;
+}
+
+/**
+ * newton command callback
+ */
+function drush_gitano_newton($number = NULL) {
+  drush_print ('newton       -> shows this help',2);
+  drush_print ('capasao      -> shows a log with colors and arrows about the git repository',2);
+  drush_print ('init         -> kickstart a project',2);
+  drush_print ('join2project -> ask about an existing projet to clone the repository and give database',2);
+  drush_print ('traepaca     -> give database and files from preproduction enviroment',2);
+  drush_print ('tirapapre    -> put live database and files into preproduction',2);
+  drush_print ('n-revert     -> shows features of a given enviroment and help to revert then',2);
 }
 
 /**
