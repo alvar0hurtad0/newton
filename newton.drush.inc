@@ -2,7 +2,7 @@
 /**
  * Implementation of hook_drush_command().
  */
-function gitano_drush_command(){
+function newton_drush_command(){
   $items['newton'] = array(
     'description' => 'Shows all newton commands',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
@@ -32,7 +32,7 @@ function gitano_drush_command(){
     'description' => 'updates NEWTON to the last version',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-  $items['init'] = array(
+  $items['n-init'] = array(
     'description' => 'init a project installing modules, enviroments and repository',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
@@ -69,10 +69,10 @@ function gitano_drush_command(){
 /**
  * newton command callback
  */
-function drush_gitano_newton($number = NULL) {
+function drush_newton($number = NULL) {
   drush_print ('newton       -> shows this help',2);
   drush_print ('capasao      -> shows a log with colors and arrows about the git repository',2);
-  drush_print ('init         -> kickstart a project',2);
+  drush_print ('n-init       -> kickstart a project',2);
   drush_print ('join2project -> ask about an existing projet to clone the repository and give database',2);
   drush_print ('traepaca     -> give database and files from preproduction enviroment',2);
   drush_print ('tirapapre    -> put live database and files into preproduction',2);
@@ -82,21 +82,21 @@ function drush_gitano_newton($number = NULL) {
 /**
  * capasao command callback
  */
-function drush_gitano_capasao($number = NULL) {
+function drush_newton_capasao($number = NULL) {
  drush_shell_exec_interactive("git log --graph --color --decorate");
 }
 
 /**
  * traepaca command callback
  */
-function drush_gitano_traepaca($number = NULL) {
+function drush_newton_traepaca($number = NULL) {
   drush_shell_exec_interactive("drush sql-sync @default.pre default");
   drush_shell_exec_interactive("drush rsync @default.pre:sites/default/files default:sites/default/files");
   drush_shell_exec_interactive("drush cc all");
   drush_shell_exec_interactive("drush vset preprocess_css 0 --yes");
 
   foreach (drush_shell_exec_output() as $line) {
-  	$out .=$line."\n\r"; 
+    $out .=$line."\n\r"; 
   }
   return $out;
 }
@@ -104,7 +104,7 @@ function drush_gitano_traepaca($number = NULL) {
 /**
  * traepaca command callback
  */
-function drush_gitano_tirapapre($number = NULL) {
+function drush_newton_tirapapre($number = NULL) {
   drush_shell_exec_interactive("drush sql-sync @default.pro @default.pre");
   drush_shell_exec_interactive("drush rsync @default.pro:sites/default/files @default.pre:sites/default/files");
   drush_shell_exec_interactive("drush @default.pre cc all");
@@ -119,11 +119,11 @@ function drush_gitano_tirapapre($number = NULL) {
 /**
  * newtonupdate command callback
  */
-function drush_gitano_newtonupdate() {
+function drush_newton_newtonupdate() {
   drush_shell_exec("cd ~/.drush/newton && git pull");
   drush_shell_exec("drush cc drush");
   foreach (drush_shell_exec_output() as $line) {
-  	$out .=$line."\n\r"; 
+    $out .=$line."\n\r"; 
   }
   return $out;
 }
@@ -131,7 +131,7 @@ function drush_gitano_newtonupdate() {
 /**
  * init command callback
  */
-function drush_gitano_init() {
+function drush_newton_n_init() {
   $project_name = drush_prompt("What's the name of the project, please");
   print ('I am downloading drupal core, it can take a minute, or two. Be patient please');
   drush_shell_exec_interactive('drush dl drupal --drupal-project-rename="'.$project_name.'" --yes');
@@ -163,7 +163,7 @@ function drush_gitano_init() {
 /**
  * join2project command callback
  */
-function drush_gitano_join2project() {
+function drush_newton_join2project() {
   $git_repository = drush_prompt("What's the URL of remote git repository");
   if ($git_repository ==''){
     return "OMG, if there's no repository there's no project";
@@ -187,7 +187,7 @@ function drush_gitano_join2project() {
   drush_shell_exec_interactive("cd $project_name && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
 }
 
-function drush_gitano_enviromentadd(){
+function drush_newton_enviromentadd(){
   print ('Now be sure you have a PREproduction site. We´re going to confiure it.\n\r');
   drush_shell_exec('mkdir '.$project_name.'/sites/all/drush');
   $pre_uri = drush_prompt("The uri");
@@ -213,7 +213,7 @@ function drush_gitano_enviromentadd(){
 
 }
 
-function drush_gitano_deploy($enviroment='pre'){
+function drush_newton_deploy($enviroment='pre'){
   switch ($enviroment){
     case 'pre':
       drush_shell_exec_interactive('drush @default.pre ssh "git pull"');
@@ -223,7 +223,7 @@ function drush_gitano_deploy($enviroment='pre'){
   }
 }
 
-function drush_gitano_n_revert($enviroment=''){
+function drush_newton_n_revert($enviroment=''){
   print('Looking for features, it can take some seconds... \n\r');
   switch ($enviroment){
     case 'pre':
