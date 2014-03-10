@@ -133,12 +133,12 @@ function drush_newton_newtonupdate() {
  */
 function drush_newton_n_init() {
   $project_name = drush_prompt("What's the name of the project, please");
-  print ('I am downloading drupal core, it can take a minute, or two. Be patient please');
+  drush_print ('I am downloading drupal core, it can take a minute, or two. Be patient please');
   drush_shell_exec_interactive('drush dl drupal --drupal-project-rename="'.$project_name.'" --yes');
 
   $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
 
-  print ('Now enter some parameters for the development site, please\n\r');
+  drush_print ('Now enter some parameters for the development site, please');
   $admin_pass = drush_prompt("The admin password (secret password if blank)", $random);
   $site_name = drush_prompt("The name of the website, please (Project Name will be used if blank)",$project_name);
   $site_email = drush_prompt("Sites email (my@example.com if blank)",'my@example.com');
@@ -169,13 +169,13 @@ function drush_newton_join2project() {
     return "OMG, if there's no repository there's no project";
   }
 
-  print ('I am cloning the repository into your machine, it can take a bit of time');
+  drush_print ('I am cloning the repository into your machine, it can take a bit of time');
   drush_shell_exec_interactive('git clone '.$git_repository);
   $project_name = drush_prompt("What's the directory name");
 
   $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
 
-  print ('Now enter some parameters for the development site, please\n\r');
+  drush_print ('Now enter some parameters for the development site, please\n\r');
   $admin_pass = $random;
   $site_name = ('unnamed');
   $site_email = 'my@example.com';
@@ -188,7 +188,7 @@ function drush_newton_join2project() {
 }
 
 function drush_newton_enviromentadd(){
-  print ('Now be sure you have a PREproduction site. We´re going to confiure it.\n\r');
+  drush_print ('Now be sure you have a PREproduction site. We´re going to confiure it.\n\r');
   drush_shell_exec('mkdir '.$project_name.'/sites/all/drush');
   $pre_uri = drush_prompt("The uri");
   $pre_root = drush_prompt("The absolute path to drupal on system");
@@ -224,7 +224,7 @@ function drush_newton_deploy($enviroment='pre'){
 }
 
 function drush_newton_n_revert($enviroment=''){
-  print('Looking for features, it can take some seconds... \n\r');
+  drush_print('Looking for features, it can take some seconds... \n\r');
   switch ($enviroment){
     case 'pre':
       drush_shell_exec('drush @default.pre features --status=enabled');
