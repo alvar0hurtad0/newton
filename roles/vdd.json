@@ -26,7 +26,9 @@
     "recipe[vdd::mc]",
     "recipe[vdd::rsync]",
     "recipe[vdd::curl]",
-    "recipe[vdd::vdd_help]"
+    "recipe[vdd::vdd_help]",
+    "recipe[vdd::curl]",
+    "recipe[vdd::sass]"
   ],
   "description": "VDD Apache, PHP, MySQL plus other tools configuration.",
   "chef_type": "role"
