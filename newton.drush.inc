@@ -17,8 +17,12 @@ function newton_drush_command(){
   $items['traepaca'] = array(
     'description' => 'take database and files from production server to actual enviroment',
     'examples' => array(
-      'drush traepaca' => 'get all data from production',
+      'drush traepaca' => 'get all data from preproduction or other enviroment',
     ),
+    'arguments' => array(
+      'enviroment' => 'The enviroment indicator',
+    ),
+    'required-arguments' => FALSE,
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
   $items['tirapapre'] = array(
@@ -89,9 +93,9 @@ function drush_newton_capasao($number = NULL) {
 /**
  * traepaca command callback
  */
-function drush_newton_traepaca($number = NULL) {
-  drush_shell_exec_interactive("drush sql-sync @default.pre default");
-  drush_shell_exec_interactive("drush rsync @default.pre:sites/default/files default:sites/default/files");
+function drush_newton_traepaca($env = 'pre') {
+  drush_shell_exec_interactive("drush sql-sync @default.".$env." default");
+  drush_shell_exec_interactive("drush rsync @default.".$env.":sites/default/files default:sites/default/files");
   drush_shell_exec_interactive("drush cc all");
   drush_shell_exec_interactive("drush vset preprocess_css 0 --yes");
 
