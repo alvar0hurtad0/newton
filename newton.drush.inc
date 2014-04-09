@@ -218,13 +218,7 @@ function drush_newton_enviromentadd(){
 }
 
 function drush_newton_deploy($enviroment='pre'){
-  switch ($enviroment){
-    case 'pre':
-      drush_shell_exec_interactive('drush @default.pre ssh "git pull"');
-    break;
-    case 'pro':
-    drush_shell_exec_interactive('drush @default.pro ssh "git pull"');
-  }
+   drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "git pull origin '.$enviroment.'"');  
 }
 
 function drush_newton_n_revert($enviroment=''){
