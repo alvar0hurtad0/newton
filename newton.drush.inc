@@ -94,7 +94,7 @@ function drush_newton_capasao($number = NULL) {
  * traepaca command callback
  */
 function drush_newton_traepaca($env = 'pre') {
-  drush_shell_exec_interactive("drush sql-sync @default.".$env." default");
+  drush_shell_exec_interactive("drush sql-sync @default.".$env." default -v");
   drush_shell_exec_interactive("drush rsync @default.".$env.":sites/default/files default:sites/default/files");
   drush_shell_exec_interactive("drush cc all");
   drush_shell_exec_interactive("drush vset preprocess_css 0 --yes");
