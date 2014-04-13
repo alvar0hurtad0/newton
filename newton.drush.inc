@@ -169,13 +169,10 @@ function drush_newton_n_init() {
  */
 function drush_newton_join2project() {
   $git_repository = drush_prompt("What's the URL of remote git repository");
-  if ($git_repository ==''){
-    return "OMG, if there's no repository there's no project";
-  }
 
+  $project_name = drush_prompt("What's the project name");
   drush_print ('I am cloning the repository into your machine, it can take a bit of time');
-  drush_shell_exec_interactive('git clone '.$git_repository);
-  $project_name = drush_prompt("What's the directory name");
+  drush_shell_exec_interactive('git clone '.$git_repository.' '.$project_name);
 
   $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
 
@@ -188,7 +185,7 @@ function drush_newton_join2project() {
   $database_root = drush_prompt("Database super-user (root if blank)",'root');
   $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
   
-  drush_shell_exec_interactive("cd $project_name && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
+  drush_shell_exec_interactive("cd ".$project_name." && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
 }
 
 function drush_newton_enviromentadd(){
