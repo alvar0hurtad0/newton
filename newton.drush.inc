@@ -67,6 +67,14 @@ function newton_drush_command(){
     'drupal dependencies' => array('features'),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
+  $items['n-snapshot'] = array(
+    'description' => 'takes a snapshot of current database associated to the current commit id',
+    'required-arguments' => FALSE,
+        'arguments' => array(
+      'enviroment' => 'The enviroment indicator',
+    ),
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
   return $items;
 }
 
@@ -269,5 +277,29 @@ function drush_newton_n_revert($enviroment=''){
       default:
       drush_shell_exec_interactive('drush  fr '.$features[$option]);
     }
+  }
+}
+
+function drush_newton_n_snapshot ($enviroment=''){
+  drush_shell_exec('git log --pretty=format:"%H" -n1');
+  $printed = drush_shell_exec_output();
+  $commit_id = $printed[0];
+  
+  drush_shell_exec('git config --get remote.origin.url');
+  $printed = drush_shell_exec_output();
+  $remote_url = $printed[0];
+  $remote_url_array=explode('/',$remote_url);
+  $repo_name = $remote_url_array[sizeof($remote_url_array)-1];
+  
+  drush_shell_exec('cd ~/.drush && mkdir cache');
+  drush_shell_exec('cd ~/.drush/cache && mkdir newton');
+  drush_shell_exec('cd ~/.drush/cache/newton && mkdir snapshot');
+  drush_shell_exec('cd ~/.drush/cache/newton/snapshot && mkdir '.$repo_name);
+  
+  if ($enviroment==''){
+    drush_shell_exec_interactive('drush sql-dump --gzip --result-file=~/.drush/cache/newton/snapshot'.$repo_name.'/'.$commit_id);
+  } else{
+    drush_shell_exec('cd ~/.drush/cache/newton/snapshot/'.$repo_name.' && mkdir '.$enviroment);
+    drush_shell_exec_interactive('drush @default.'.@enviroment.'sql-dump --gzip --result-file=~/.drush/cache/newton/snapshot'.$repo_name.'/'.$enviroment.'/'.$commit_id);
   }
 }
