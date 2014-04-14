@@ -74,6 +74,16 @@ function newton_drush_command(){
       'enviroment' => 'The enviroment indicator',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+    'aliases' => array('foto', 'afoto'),
+  );
+  $items['n-rollback'] = array(
+    'description' => 'rollback the project to a concrete commit ID including database',
+    'required-arguments' => FALSE,
+        'arguments' => array(
+      'enviroment' => 'The enviroment indicator',
+    ),
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+    'aliases' => array('marchaatras', 'patras'),
   );
   return $items;
 }
@@ -291,15 +301,72 @@ function drush_newton_n_snapshot ($enviroment=''){
   $remote_url_array=explode('/',$remote_url);
   $repo_name = $remote_url_array[sizeof($remote_url_array)-1];
   
-  drush_shell_exec('cd ~/.drush && mkdir cache');
-  drush_shell_exec('cd ~/.drush/cache && mkdir newton');
-  drush_shell_exec('cd ~/.drush/cache/newton && mkdir snapshot');
-  drush_shell_exec('cd ~/.drush/cache/newton/snapshot && mkdir '.$repo_name);
   
   if ($enviroment==''){
-    drush_shell_exec_interactive('drush sql-dump --gzip --result-file=~/.drush/cache/newton/snapshot'.$repo_name.'/'.$commit_id);
+    drush_shell_exec('cd ~/.drush && mkdir cache');
+    drush_shell_exec('cd ~/.drush/cache && mkdir newton');
+    drush_shell_exec('cd ~/.drush/cache/newton && mkdir snapshot');
+    drush_shell_exec('cd ~/.drush/cache/newton/snapshot && mkdir '.$repo_name);
+    drush_shell_exec_interactive('drush sql-dump --result-file=~/.drush/cache/newton/snapshot/'.$repo_name.'/'.$commit_id);
   } else{
-    drush_shell_exec('cd ~/.drush/cache/newton/snapshot/'.$repo_name.' && mkdir '.$enviroment);
-    drush_shell_exec_interactive('drush @default.'.@enviroment.'sql-dump --gzip --result-file=~/.drush/cache/newton/snapshot'.$repo_name.'/'.$enviroment.'/'.$commit_id);
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush && mkdir cache"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache && mkdir newton"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton && mkdir snapshot"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton/snapshot && mkdir '.$repo_name.'"');
+    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "drush sql-dump --result-file=~/.drush/cache/newton/snapshot/'.$repo_name.'/'.$commit_id.'"');
+  }
+}
+
+function drush_newton_n_rollback ($enviroment=''){
+  drush_shell_exec('git log --pretty=format:"%H" -n1');
+  $printed = drush_shell_exec_output();
+  $commit_id = $printed[0];
+  
+  drush_shell_exec('git config --get remote.origin.url');
+  $printed = drush_shell_exec_output();
+  $remote_url = $printed[0];
+  $remote_url_array=explode('/',$remote_url);
+  $repo_name = $remote_url_array[sizeof($remote_url_array)-1];
+  
+  $cont=0;
+  if ($enviroment==''){
+    drush_shell_exec('cd ~/.drush/cache/newton/snapshot/'.$repo_name.' && ls');
+    $printed = drush_shell_exec_output();
+    foreach ($printed as $item){
+      drush_shell_exec('git log --pretty="%H %cd %s" '.$item.' -n1');
+      $commit_info = drush_shell_exec_output();
+      drush_print(($cont+1).' - '.$commit_info[0],2);
+      $cont++;
+    }
+    $option = drush_prompt("Enter the number of snapshot to rollback, please (0 to cancel)",'0',TRUE);
+    drush_shell_exec_interactive ('git checkout '.$printed[$option-1]);
+    drush_shell_exec('echo ~');
+    $user_home = drush_shell_exec_output();
+    drush_shell_exec_interactive ('drush sql-query --file="'.$user_home[0].'/.drush/cache/newton/snapshot/'.$repo_name.'/'.$printed[$option-1].'"');
+  } else {
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton/snapshot/'.$repo_name.' && ls"');
+    $printed = drush_shell_exec_output();
+    foreach ($printed as $item){
+      drush_shell_exec('git log --pretty="%H %cd %s" '.$item.' -n1');
+      $commit_info = drush_shell_exec_output();
+      drush_print(($cont+1).' - '.$commit_info[0],2);
+      $cont++;
+    }
+    $option = drush_prompt("Enter the number of snapshot to rollback, please (0 to cancel)",'0',TRUE);
+    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "git checkout '.$printed[$option-1].'"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "echo ~"');
+    $user_home = drush_shell_exec_output();
+    foreach($user_home as $item){
+     if ($item[0]=='/'){
+       $remote_home = $item;
+      }
+    }
+    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "drush sql-query --file='.$remote_home.'/.drush/cache/newton/snapshot/'.$repo_name.'/'.$printed[$option-1].'"');
+    /*
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache && mkdir newton"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton && mkdir snapshot"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton/snapshot && mkdir '.$repo_name.'"');
+    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "drush sql-dump --result-file=~/.drush/cache/newton/snapshot/'.$repo_name.'/'.$commit_id.'"');
+  */
   }
 }
