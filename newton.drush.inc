@@ -205,7 +205,9 @@ function drush_newton_join2project() {
   
   drush_shell_exec_interactive("cd ".$project_name." && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
 }
-
+/**
+ * enviromentadd command callback
+ */
 function drush_newton_enviromentadd(){
   drush_print ('Now be sure you have a PREproduction site. We´re going to confiure it.\n\r');
   drush_shell_exec('mkdir '.$project_name.'/sites/all/drush');
@@ -232,6 +234,9 @@ function drush_newton_enviromentadd(){
 
 }
 
+/**
+ * deploy command callback
+ */
 function drush_newton_deploy($enviroment='pre'){
    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "git pull origin '.$enviroment.'"');  
 }
@@ -289,7 +294,9 @@ function drush_newton_n_revert($enviroment=''){
     }
   }
 }
-
+/**
+ * n-snapshot command callback
+ */
 function drush_newton_n_snapshot ($enviroment=''){
   drush_shell_exec('git log --pretty=format:"%H" -n1');
   $printed = drush_shell_exec_output();
@@ -317,6 +324,9 @@ function drush_newton_n_snapshot ($enviroment=''){
   }
 }
 
+/**
+ * n-rollback command callback
+ */
 function drush_newton_n_rollback ($enviroment=''){
   drush_shell_exec('git log --pretty=format:"%H" -n1');
   $printed = drush_shell_exec_output();
