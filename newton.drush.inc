@@ -238,7 +238,59 @@ function drush_newton_enviromentadd(){
  * deploy command callback
  */
 function drush_newton_deploy($enviroment='pre'){
-   drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "git pull origin '.$enviroment.'"');  
+   $green = "\033[0;33;40m\033[1m[%s]\033[0m";
+   $merge = drush_prompt("merge before?",'yes');
+   if ($merge = 'yes'){
+     switch ($enviroment){
+       case 'pre':
+			$previous_branch = 'master';
+       break;
+       case 'pro':
+			$previous_branch = 'pre';
+       break;
+     }
+     
+     drush_print(sprintf($green, dt('git checkout '.$previous_branch)));
+	 drush_shell_exec_interactive('git checkout '.$previous_branch);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	 
+     drush_print(sprintf($green, dt('git pull origin '.$previous_branch)));
+     //drush_shell_exec_interactive('git pull origin '.$previous_branch);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	     
+	 drush_print(sprintf($green, dt('git push origin '.$previous_branch)));
+	 drush_shell_exec_interactive('git push origin '.$previous_branch);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	       
+	 drush_print(sprintf($green, dt('git checkout '.$enviroment)));
+	 drush_shell_exec_interactive('git checkout '.$enviroment);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	
+	 drush_print(sprintf($green, dt('git pull origin '.$enviroment)));
+	 drush_shell_exec_interactive('git pull origin '.$enviroment);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	 
+	 drush_print(sprintf($green, dt('git merge '.$previous_branch)));
+	 drush_shell_exec_interactive('git merge '.$previous_branch);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	 	       
+	 drush_print(sprintf($green, dt('git push origin '.$enviroment)));
+	 drush_shell_exec_interactive('git push origin '.$enviroment);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	       
+	 drush_print(sprintf($green, dt('git checkout master')));
+	 drush_shell_exec_interactive('git checkout master');
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+   }
+   drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "git pull origin '.$enviroment.'"');
 }
 
 function drush_newton_n_revert($enviroment=''){
