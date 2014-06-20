@@ -67,6 +67,24 @@ function newton_drush_command(){
     'drupal dependencies' => array('features'),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
+  $items['n-snapshot'] = array(
+    'description' => 'takes a snapshot of current database associated to the current commit id',
+    'required-arguments' => FALSE,
+        'arguments' => array(
+      'enviroment' => 'The enviroment indicator',
+    ),
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+    'aliases' => array('foto', 'afoto'),
+  );
+  $items['n-rollback'] = array(
+    'description' => 'rollback the project to a concrete commit ID including database',
+    'required-arguments' => FALSE,
+        'arguments' => array(
+      'enviroment' => 'The enviroment indicator',
+    ),
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+    'aliases' => array('marchaatras', 'patras'),
+  );
   return $items;
 }
 
@@ -169,13 +187,10 @@ function drush_newton_n_init() {
  */
 function drush_newton_join2project() {
   $git_repository = drush_prompt("What's the URL of remote git repository");
-  if ($git_repository ==''){
-    return "OMG, if there's no repository there's no project";
-  }
 
+  $project_name = drush_prompt("What's the project name");
   drush_print ('I am cloning the repository into your machine, it can take a bit of time');
-  drush_shell_exec_interactive('git clone '.$git_repository);
-  $project_name = drush_prompt("What's the directory name");
+  drush_shell_exec_interactive('git clone '.$git_repository.' '.$project_name);
 
   $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
 
@@ -188,9 +203,11 @@ function drush_newton_join2project() {
   $database_root = drush_prompt("Database super-user (root if blank)",'root');
   $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
   
-  drush_shell_exec_interactive("cd $project_name && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
+  drush_shell_exec_interactive("cd ".$project_name." && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
 }
-
+/**
+ * enviromentadd command callback
+ */
 function drush_newton_enviromentadd(){
   drush_print ('Now be sure you have a PREproduction site. We´re going to confiure it.\n\r');
   drush_shell_exec('mkdir '.$project_name.'/sites/all/drush');
@@ -217,8 +234,63 @@ function drush_newton_enviromentadd(){
 
 }
 
+/**
+ * deploy command callback
+ */
 function drush_newton_deploy($enviroment='pre'){
-   drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "git pull origin '.$enviroment.'"');  
+   $green = "\033[0;33;40m\033[1m[%s]\033[0m";
+   $merge = drush_prompt("merge before?",'yes');
+   if ($merge = 'yes'){
+     switch ($enviroment){
+       case 'pre':
+			$previous_branch = 'master';
+       break;
+       case 'pro':
+			$previous_branch = 'pre';
+       break;
+     }
+     
+     drush_print(sprintf($green, dt('git checkout '.$previous_branch)));
+	 drush_shell_exec_interactive('git checkout '.$previous_branch);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	 
+     drush_print(sprintf($green, dt('git pull origin '.$previous_branch)));
+     //drush_shell_exec_interactive('git pull origin '.$previous_branch);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	     
+	 drush_print(sprintf($green, dt('git push origin '.$previous_branch)));
+	 drush_shell_exec_interactive('git push origin '.$previous_branch);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	       
+	 drush_print(sprintf($green, dt('git checkout '.$enviroment)));
+	 drush_shell_exec_interactive('git checkout '.$enviroment);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	
+	 drush_print(sprintf($green, dt('git pull origin '.$enviroment)));
+	 drush_shell_exec_interactive('git pull origin '.$enviroment);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	 
+	 drush_print(sprintf($green, dt('git merge '.$previous_branch)));
+	 drush_shell_exec_interactive('git merge '.$previous_branch);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	 	       
+	 drush_print(sprintf($green, dt('git push origin '.$enviroment)));
+	 drush_shell_exec_interactive('git push origin '.$enviroment);
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+	       
+	 drush_print(sprintf($green, dt('git checkout master')));
+	 drush_shell_exec_interactive('git checkout master');
+	 $continue = drush_prompt("continue?????", 'yes');
+	 if ($continue != "yes"){return;}
+   }
+   drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "git pull origin '.$enviroment.'"');
 }
 
 function drush_newton_n_revert($enviroment=''){
@@ -272,5 +344,91 @@ function drush_newton_n_revert($enviroment=''){
       default:
       drush_shell_exec_interactive('drush  fr '.$features[$option]);
     }
+  }
+}
+/**
+ * n-snapshot command callback
+ */
+function drush_newton_n_snapshot ($enviroment=''){
+  drush_shell_exec('git log --pretty=format:"%H" -n1');
+  $printed = drush_shell_exec_output();
+  $commit_id = $printed[0];
+  
+  drush_shell_exec('git config --get remote.origin.url');
+  $printed = drush_shell_exec_output();
+  $remote_url = $printed[0];
+  $remote_url_array=explode('/',$remote_url);
+  $repo_name = $remote_url_array[sizeof($remote_url_array)-1];
+  
+  
+  if ($enviroment==''){
+    drush_shell_exec('cd ~/.drush && mkdir cache');
+    drush_shell_exec('cd ~/.drush/cache && mkdir newton');
+    drush_shell_exec('cd ~/.drush/cache/newton && mkdir snapshot');
+    drush_shell_exec('cd ~/.drush/cache/newton/snapshot && mkdir '.$repo_name);
+    drush_shell_exec_interactive('drush sql-dump --result-file=~/.drush/cache/newton/snapshot/'.$repo_name.'/'.$commit_id);
+  } else{
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush && mkdir cache"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache && mkdir newton"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton && mkdir snapshot"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton/snapshot && mkdir '.$repo_name.'"');
+    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "drush sql-dump --result-file=~/.drush/cache/newton/snapshot/'.$repo_name.'/'.$commit_id.'"');
+  }
+}
+
+/**
+ * n-rollback command callback
+ */
+function drush_newton_n_rollback ($enviroment=''){
+  drush_shell_exec('git log --pretty=format:"%H" -n1');
+  $printed = drush_shell_exec_output();
+  $commit_id = $printed[0];
+  
+  drush_shell_exec('git config --get remote.origin.url');
+  $printed = drush_shell_exec_output();
+  $remote_url = $printed[0];
+  $remote_url_array=explode('/',$remote_url);
+  $repo_name = $remote_url_array[sizeof($remote_url_array)-1];
+  
+  $cont=0;
+  if ($enviroment==''){
+    drush_shell_exec('cd ~/.drush/cache/newton/snapshot/'.$repo_name.' && ls');
+    $printed = drush_shell_exec_output();
+    foreach ($printed as $item){
+      drush_shell_exec('git log --pretty="%H %cd %s" '.$item.' -n1');
+      $commit_info = drush_shell_exec_output();
+      drush_print(($cont+1).' - '.$commit_info[0],2);
+      $cont++;
+    }
+    $option = drush_prompt("Enter the number of snapshot to rollback, please (0 to cancel)",'0',TRUE);
+    drush_shell_exec_interactive ('git checkout '.$printed[$option-1]);
+    drush_shell_exec('echo ~');
+    $user_home = drush_shell_exec_output();
+    drush_shell_exec_interactive ('drush sql-query --file="'.$user_home[0].'/.drush/cache/newton/snapshot/'.$repo_name.'/'.$printed[$option-1].'"');
+  } else {
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton/snapshot/'.$repo_name.' && ls"');
+    $printed = drush_shell_exec_output();
+    foreach ($printed as $item){
+      drush_shell_exec('git log --pretty="%H %cd %s" '.$item.' -n1');
+      $commit_info = drush_shell_exec_output();
+      drush_print(($cont+1).' - '.$commit_info[0],2);
+      $cont++;
+    }
+    $option = drush_prompt("Enter the number of snapshot to rollback, please (0 to cancel)",'0',TRUE);
+    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "git checkout '.$printed[$option-1].'"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "echo ~"');
+    $user_home = drush_shell_exec_output();
+    foreach($user_home as $item){
+     if ($item[0]=='/'){
+       $remote_home = $item;
+      }
+    }
+    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "drush sql-query --file='.$remote_home.'/.drush/cache/newton/snapshot/'.$repo_name.'/'.$printed[$option-1].'"');
+    /*
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache && mkdir newton"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton && mkdir snapshot"');
+    drush_shell_exec('drush @default.'.$enviroment.' ssh "cd ~/.drush/cache/newton/snapshot && mkdir '.$repo_name.'"');
+    drush_shell_exec_interactive('drush @default.'.$enviroment.' ssh "drush sql-dump --result-file=~/.drush/cache/newton/snapshot/'.$repo_name.'/'.$commit_id.'"');
+  */
   }
 }
