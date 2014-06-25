@@ -3,7 +3,7 @@
   "memory": "1024",
   "synced_folder": {
     "host_path": "data/",
-    "guest_path": "/home/vagrant",
+    "guest_path": "/home/vagrant/shared",
     "use_nfs": false
   },
   "php": {
