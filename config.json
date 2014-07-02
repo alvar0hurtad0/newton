@@ -41,6 +41,8 @@
     }
   },
   "custom_roles": [
-    "vdd_example"
+    "aspgems-web"
+  //  "aspgems-neurok"
+    
   ]
 }

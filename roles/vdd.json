@@ -29,7 +29,8 @@
     "recipe[vdd::vdd_help]",
     "recipe[vdd::curl]",
     "recipe[vdd::sass]",
-    "recipe[vdd::newton]"
+    "recipe[vdd::newton]",
+    "recipe[vdd::vim]"
   ],
   "description": "VDD Apache, PHP, MySQL plus other tools configuration.",
   "chef_type": "role"
