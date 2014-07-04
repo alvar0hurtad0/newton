@@ -1,0 +1,9 @@
+<VirtualHost *:80>
+  DocumentRoot /var/www/dontknow-vox/httpdocs/
+  ServerName localhost
+  RewriteEngine On
+  ErrorLog /var/log/apache2/error-dontknow-vox.log
+  LogLevel warn
+  CustomLog /var/log/apache2/access-dontknow-vox.log combined
+  ServerSignature On
+</VirtualHost>
