@@ -188,8 +188,14 @@ function drush_newton_n_init() {
  */
 function drush_newton_join2project() {
   $git_repository = drush_prompt("What's the URL of remote git repository");
+  
+  $pieces=explode('/',$git_repository);
+  $size=sizeof($pieces);
+  $last=$pieces[$size -1 ];
+  $pieces_last=explode('.',$last);
+  $project_name = $pieces_last[0];
 
-  $project_name = drush_prompt("What's the project name");
+  $project_name = drush_prompt("What's the project name", $project_name);
   drush_print ('I am cloning the repository into your machine, it can take a bit of time');
   drush_shell_exec_interactive('git clone '.$git_repository.' '.$project_name);
 
@@ -205,6 +211,11 @@ function drush_newton_join2project() {
   $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
   
   drush_shell_exec_interactive("cd ".$project_name."/httpdocs && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
+  $synchronize = drush_prompt("synchronize from pre?",'yes');
+  if ($synchronize == 'yes'){
+    drush_newton_traepaca();
+  }
+
 }
 /**
  * enviromentadd command callback
