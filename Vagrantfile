@@ -3,11 +3,16 @@ Vagrant.configure("2") do |config|
   # Load config JSON
   vdd_config_path = File.expand_path(File.dirname(__FILE__)) + "/config.json"
   vdd_config = JSON.parse(File.read(vdd_config_path))
+  # Load personal_information.json
+  vamp_personal_path = File.expand_path(File.dirname(__FILE__)) + "/personal_information.json"
+  vamp_personal =  JSON.parse(File.read(vamp_personal_path))
+  
+  vdd_config["git"] = vamp_personal["git"]
 
   # Base box
   config.vm.box = "precise32"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
-
+  
   # Networking
   config.vm.network :private_network, ip: vdd_config["ip"]
 
