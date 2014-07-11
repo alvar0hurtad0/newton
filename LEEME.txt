@@ -11,6 +11,10 @@ Para ver todas las ramas que existen solamente tienes que ejecutar el comando:
 
   git branch -a
 
+Para traerte una rama remota
+
+  git checkout --track origin/mibonitaramaremota
+
 y te mostrará no solo las ramas que tienes en local si no las ramas que hay en remoto.
 
 Si quieres traerte a tu entorno una rama remota tienes que ejecutar en tu local:
@@ -41,4 +45,4 @@ Si es la primera vez que la enciendes, tardará un ratillo, paciencia. Cuando es
 
 La clave del usuario vagrant es vagrant
 
-Asegurate de tener las claves publicas en tu usuario de bitbucket, jenkins y los servidores o no te funcionarán los despliegues.
+Asegurate de tener las claves publicas en tu usuario de bitbucket, y los servidores o no te funcionarán los despliegues.
