@@ -213,7 +213,7 @@ function drush_newton_join2project() {
   drush_shell_exec_interactive("cd ".$project_name."/httpdocs && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$project_name");
   $synchronize = drush_prompt("synchronize from pre?",'yes');
   if ($synchronize == 'yes'){
-    drush_newton_traepaca();
+	drush_shell_exec_interactive("cd ".$project_name."/httpdocs && drush traepaca");
   }
 
 }
