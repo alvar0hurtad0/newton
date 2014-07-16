@@ -268,7 +268,7 @@ function drush_newton_deploy($enviroment='pre'){
 	 if ($continue != "yes"){return;}
 	 
      drush_print(sprintf($green, dt('git pull origin '.$previous_branch)));
-     //drush_shell_exec_interactive('git pull origin '.$previous_branch);
+     drush_shell_exec_interactive('git pull origin '.$previous_branch);
 	 $continue = drush_prompt("continue?????", 'yes');
 	 if ($continue != "yes"){return;}
 	     
