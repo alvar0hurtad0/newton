@@ -30,7 +30,8 @@
     "recipe[vdd::curl]",
     "recipe[vdd::sass]",
     "recipe[vdd::newton]",
-    "recipe[vdd::vim]"
+    "recipe[vdd::vim]",
+    "recipe[vdd::ruby-compass]"
   ],
   "description": "VDD Apache, PHP, MySQL plus other tools configuration.",
   "chef_type": "role"
