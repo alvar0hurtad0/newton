@@ -1,1 +1,7 @@
 alias ls='ls --color=auto'
+
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+export GIT_PS1_SHOWSTASHSTATE=true
+
+export PS1='\u@\h$(__git_ps1 " (%s)") \W$ '
