@@ -205,7 +205,7 @@ function drush_newton_join2project() {
   $admin_pass = $random;
   $site_name = ('unnamed');
   $site_email = 'my@example.com';
-  $database_user = drush_prompt("Database user for THIS project (directory name if blank)",$project_name);
+  $database_user = substr (drush_prompt("Database user for THIS project (directory name if blank)",$project_name), 0, 16);
   $database_user_pw = drush_prompt("Database user PASSWORD for this project (secret password if blank)",$random);
   $database_root = drush_prompt("Database super-user (root if blank)",'root');
   $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
