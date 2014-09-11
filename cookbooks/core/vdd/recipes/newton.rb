@@ -1,4 +1,4 @@
-directory "/home/vagrant/.drush/newton" do
+directory "/home/vagrant/.drush" do
   owner "vagrant"
   group "vagrant"
   mode "0755"
