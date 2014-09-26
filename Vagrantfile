@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
   
   # Networking
   config.vm.network :private_network, ip: vdd_config["ip"]
-
+  config.vm.network "forwarded_port", guest: 9000, host: 9009
   # Customize provider
   config.vm.provider :virtualbox do |vb|
     # RAM
@@ -26,6 +26,10 @@ Vagrant.configure("2") do |config|
       vdd_config["synced_folder"]["guest_path"],
       :nfs => vdd_config["synced_folder"]["use_nfs"]
   end
+
+  # ssh
+    # Set up SSH agent forwarding.
+    config.ssh.forward_agent = true
 
   # Customize provisioner
   config.vm.provision :chef_solo do |chef|
