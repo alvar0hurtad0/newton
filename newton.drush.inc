@@ -113,7 +113,7 @@ function drush_newton($number = NULL) {
   drush_print ('n-revert     -> shows features of a given enviroment and help to revert then',2);
 }
 /**
- * initfeature command callback
+ * initfeature command callback d
  */
 
 function drush_newton_initfeature ()
