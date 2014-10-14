@@ -115,28 +115,25 @@ function drush_newton($number = NULL) {
 /**
  * initfeature command callback d
  */
-
-function drush_newton_initfeature ()
-{
-$idtask=drush_prompt("What´s the name of the task, please");
-drush_shell_exec_interactive('sudo git checkout -b '. $idtask);
+function drush_newton_initfeature () {
+  $idtask=drush_prompt("What´s the name of the task, please");
+  drush_shell_exec_interactive('git checkout -b '. $idtask);
 }
 
 /**
  * endfeature command callback
  */
-function drush_newton_endfeature ()
-{
-$idtask=drush_prompt("What is the name of the task that you want to finish?");
-drush_shell_exec_interactive('sudo git checkout master ');
-drush_shell_exec_interactive('sudo git merge '.$idtask); 
+function drush_newton_endfeature () {
+  $idtask=drush_prompt("What is the name of the task that you want to finish?");
+  drush_shell_exec_interactive('git checkout master ');
+  drush_shell_exec_interactive('git merge '.$idtask); 
 }
 
 /**
  * capasao command callback
  */
 function drush_newton_capasao($number = NULL) {
- drush_shell_exec_interactive("git log --graph --color --decorate");
+  drush_shell_exec_interactive("git log --graph --color --decorate");
 }
 
 /**
