@@ -1,0 +1,9 @@
+<VirtualHost *:80>
+  DocumentRoot /var/www/aspgems-neurok/httpdocs/
+  ServerName localhost
+  RewriteEngine On
+  ErrorLog /var/log/apache2/error-aspgems-neurok.log
+  LogLevel warn
+  CustomLog /var/log/apache2/access-aspgems-neurok.log combined
+  ServerSignature On
+</VirtualHost>

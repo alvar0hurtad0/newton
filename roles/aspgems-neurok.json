@@ -1,0 +1,13 @@
+{
+  "name": "aspgems-neurok",
+  "env_run_lists": {},
+  "default_attributes": {},
+  "override_attributes": {},
+  "json_class": "Chef::Role",
+  "run_list": [
+    "recipe[aspgems-neurok]",
+    "recipe[aspgems-neurok::apache]"
+  ],
+  "description": "Web neurok.",
+  "chef_type": "role"
+}

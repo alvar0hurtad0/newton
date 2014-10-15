@@ -1,0 +1,48 @@
+¿Cómo se usa esto?
+=================
+
+Lo primero que tienes que tener en mente, amigo lector de la pradera, es que vamos a tener una misma máquina para todos los proyectos pero con una configuración distinta para cada proyecto.
+
+A partir de ahí, ten en cuenta que cada proyecto evoluciona (o no) en su propia rama, llamada con el nombre clave de cada proyecto:
+
+cliente-proyecto
+
+Para ver todas las ramas que existen solamente tienes que ejecutar el comando:
+
+  git branch -a
+
+Para traerte una rama remota
+
+  git checkout --track origin/mibonitaramaremota
+
+y te mostrará no solo las ramas que tienes en local si no las ramas que hay en remoto.
+
+Si quieres traerte a tu entorno una rama remota tienes que ejecutar en tu local:
+
+  git clone -b <branch> <remote_repo>
+
+Cuando tengas el entorno en el proyecto deseado solo tienes que hacer
+
+vagrant provision
+
+¿Qué hago la primera vez?
+========================
+
+Hay que hacer dos cosillas cuando tengas el repositorio recién bajado, lo primero generar un fichero con información personal para el git.
+
+  sh generate_personal.sh
+
+esto te generará un fichero que no se tendrá en cuenta para el versionado git llamado "personal_information.json" entra y edita tus datos.
+
+Después de esto, enciende la máquina con
+
+  vagrant up
+
+Si es la primera vez que la enciendes, tardará un ratillo, paciencia. Cuando esté encendida, lo mejor es que copies tus claves dentro para tener un solo par clave publica, clave privada:
+
+  scp ~/.ssh/id_rsa vagrant@192.168.44.44:/home/vagrant/.ssh/
+  scp ~/.ssh/id_rsa.pub vagrant@192.168.44.44:/home/vagrant/.ssh/
+
+La clave del usuario vagrant es vagrant
+
+Asegurate de tener las claves publicas en tu usuario de bitbucket, y los servidores o no te funcionarán los despliegues.
