@@ -124,8 +124,14 @@ function drush_newton_initfeature () {
  * endfeature command callback
  */
 function drush_newton_endfeature () {
-  $idtask=drush_prompt("What is the name of the task that you want to finish?");
-  drush_shell_exec_interactive('git checkout master ');
+  drush_shell_exec('git branch --list');
+  $lines=drush_shell_exec_output();
+  foreach ($lines as $valor)  {
+    if (preg_match("/  /i", $valor)==0) {
+      $idtask=substr($valor,2);
+    }
+  }
+  drush_shell_exec_interactive('git checkout master');
   drush_shell_exec_interactive('git merge '.$idtask); 
 }
 
