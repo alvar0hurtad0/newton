@@ -113,7 +113,7 @@ function drush_newton($number = NULL) {
   drush_print ('n-revert     -> shows features of a given enviroment and help to revert then',2);
 }
 /**
- * initfeature command callback d
+ * initfeature command callback 
  */
 function drush_newton_initfeature () {
   $idtask=drush_prompt("What´s the name of the task, please");
