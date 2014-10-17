@@ -7,6 +7,16 @@ function newton_drush_command(){
     'description' => 'Shows all newton commands',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
+
+  $items['initfeature']= array(
+    'description' => 'Create a new task',
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
+  $items['endfeature'] = array(
+     'description' => 'Ends a task',
+     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
+
   $items['capasao'] = array(
     'description' => 'Shows a git log --reverse --oneline --graph',
     'examples' => array(
@@ -93,6 +103,8 @@ function newton_drush_command(){
  */
 function drush_newton($number = NULL) {
   drush_print ('newton       -> shows this help',2);
+  drush_print ('initfeature  -> Create a new task',2);
+  drush_print ('endfeature   -> Ends a task',2);
   drush_print ('capasao      -> shows a log with colors and arrows about the git repository',2);
   drush_print ('n-init       -> kickstart a project',2);
   drush_print ('join2project -> ask about an existing projet to clone the repository and give database',2);
@@ -100,12 +112,34 @@ function drush_newton($number = NULL) {
   drush_print ('tirapapre    -> put live database and files into preproduction',2);
   drush_print ('n-revert     -> shows features of a given enviroment and help to revert then',2);
 }
+/**
+ * initfeature command callback 
+ */
+function drush_newton_initfeature () {
+  $idtask=drush_prompt("What´s the name of the task, please");
+  drush_shell_exec_interactive('git checkout -b '. $idtask);
+}
+
+/**
+ * endfeature command callback
+ */
+function drush_newton_endfeature () {
+  drush_shell_exec('git branch --list');
+  $lines=drush_shell_exec_output();
+  foreach ($lines as $valor)  {
+    if (preg_match("/  /i", $valor)==0) {
+      $idtask=substr($valor,2);
+    }
+  }
+  drush_shell_exec_interactive('git checkout master');
+  drush_shell_exec_interactive('git merge '.$idtask); 
+}
 
 /**
  * capasao command callback
  */
 function drush_newton_capasao($number = NULL) {
- drush_shell_exec_interactive("git log --graph --color --decorate");
+  drush_shell_exec_interactive("git log --graph --color --decorate");
 }
 
 /**
