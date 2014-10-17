@@ -1,5 +1,6 @@
 <?php
-function gitano_init_modules(){
+
+function gitano_init_modules() {
   $modules = Array();
   $modules[] = 'views';
   $modules[] = 'coffee';
@@ -7,7 +8,8 @@ function gitano_init_modules(){
   $modules[] = 'smtp';
   $modules[] = 'google_analytics';
   $modules[] = 'adminimal_theme';
-  $adminimal[] = 'adminimal_admin_menu';
-  
+  $modules[] = 'adminimal_admin_menu';
+
   return $modules;
 }
+
