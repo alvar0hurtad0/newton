@@ -112,12 +112,18 @@ function drush_newton($number = NULL) {
   drush_print ('tirapapre    -> put live database and files into preproduction',2);
   drush_print ('n-revert     -> shows features of a given enviroment and help to revert then',2);
 }
+
 /**
  * initfeature command callback 
  */
 function drush_newton_initfeature () {
-  $idtask=drush_prompt("WhatÂ´s the name of the task, please");
-  drush_shell_exec_interactive('git checkout -b '. $idtask);
+  $id=drush_prompt("Cual es el id de la tarea? Indica 0 si la tarea no esta");
+  $descripcion=drush_prompt("Cual es la descripcion de la tarea?");
+  $descripcion=mb_substr($descripcion,0,50);
+  $caracteresProblematicos=array(" :",": ",":","- ", " -","-"," ");
+  $descripcion=str_replace($caracteresProblematicos,"_",$descripcion);
+  $idtask=$id."-".$descripcion;
+  drush_shell_exec_interactive('git checkout -b '.$idtask);
 }
 
 /**
@@ -130,9 +136,29 @@ function drush_newton_endfeature () {
     if (preg_match("/  /i", $valor)==0) {
       $idtask=substr($valor,2);
     }
+  }  
+  $tiempo=drush_prompt("Has tardado el tiempo esperado? Por favor Indica
+  0 en el caso que haya tardado menos
+  1 en el caso de que haya tardado el tiempo asignado  
+  2 si ha tardado mÃs que el tiempo asignado");
+  if ($tiempo==2) {
+    $motivo=drush_prompt("Indique el motivo de su retraso
+    0 Si el motivo es culpa del cliente 
+    1 Otros");
   }
-  drush_shell_exec_interactive('git checkout master');
-  drush_shell_exec_interactive('git merge '.$idtask); 
+  $dir="/home/vagrant/.drush/newton/datos.txt";
+  $datos=array ($idtask => array($tiempo => $motivo));
+  $fp=fopen($dir,"a+");
+  if ($fp) {  
+    $datosenjson=json_encode($datos);
+    fwrite($fp,$datosenjson);
+    drush_shell_exec_interactive('git checkout master');
+    drush_shell_exec_interactive('git merge -m "'.$datosenjson.'" --no-ff '.$idtask);
+  }
+  else {
+    drush_prompt("No se ha creado el archivo");
+    drush_shell_exec_interactive('^[');
+  }   
 }
 
 /**
