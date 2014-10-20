@@ -146,7 +146,7 @@ function drush_newton_endfeature () {
     0 Si el motivo es culpa del cliente 
     1 Otros");
   }
-  $dir="/home/vagrant/.drush/newton/datos.txt";
+  $dir="~/.drush/newton/datos.txt";
   $datos=array ($idtask => array($tiempo => $motivo));
   $fp=fopen($dir,"a+");
   if ($fp) {  
