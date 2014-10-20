@@ -117,12 +117,12 @@ function drush_newton($number = NULL) {
  * initfeature command callback 
  */
 function drush_newton_initfeature () {
-  $id=drush_prompt("Cual es el id de la tarea? Indica 0 si la tarea no esta");
-  $descripcion=drush_prompt("Cual es la descripcion de la tarea?");
-  $descripcion=mb_substr($descripcion,0,50);
-  $caracteresProblematicos=array(" :",": ",":","- ", " -","-"," ");
-  $descripcion=str_replace($caracteresProblematicos,"_",$descripcion);
-  $idtask=$id."-".$descripcion;
+  $id=drush_prompt("What's the ID of de Task? Indicates 0 if the task isn't ");
+  $description=drush_prompt("What's the description of the task?");
+  $description=mb_substr($description,0,50);
+  $characters=array(" :",": ",":","- ", " -","-"," ");
+  $description=str_replace($characters,"_",$description);
+  $idtask=$id."-".$description;
   drush_shell_exec_interactive('git checkout -b '.$idtask);
 }
 
@@ -137,28 +137,49 @@ function drush_newton_endfeature () {
       $idtask=substr($valor,2);
     }
   }  
-  $tiempo=drush_prompt("Has tardado el tiempo esperado? Por favor Indica
-  0 en el caso que haya tardado menos
-  1 en el caso de que haya tardado el tiempo asignado  
-  2 si ha tardado mÃs que el tiempo asignado");
-  if ($tiempo==2) {
-    $motivo=drush_prompt("Indique el motivo de su retraso
-    0 Si el motivo es culpa del cliente 
-    1 Otros");
+  $time=drush_prompt("Ha ido como esperabas? Por favor Indica
+  0 Lo esperado
+  1 Mejor de lo esperado 
+  2 Peor de lo esperado");
+  if ($time==2) {
+    $timeArray=array("Peor_de_lo_esperado" => $time);
+    $reason=drush_prompt("Indique el motivo de su retraso
+    1 Falta de comunicaciÃn con el cliente
+    2 La tarea no estaba bien planteada
+    3 Otros");
+    if ($reason==1) {
+      $reasonArray=array("Falta_de_comucnicacion_con_el_cliente" => $reason);
+    }
+    elseif ($reason==2) {
+      $reasonArray=array("La_tarea_no_estaba_bien_planteada" => $reason);
+    }
+    else {
+      $reasonArray=array("Otros" => $reason);
+    }
   }
-  $dir="~/.drush/newton/datos.txt";
-  $datos=array ($idtask => array($tiempo => $motivo));
-  $fp=fopen($dir,"a+");
-  if ($fp) {  
-    $datosenjson=json_encode($datos);
-    fwrite($fp,$datosenjson);
-    drush_shell_exec_interactive('git checkout master');
-    drush_shell_exec_interactive('git merge -m "'.$datosenjson.'" --no-ff '.$idtask);
+  elseif ($time==1) {
+    $timeArray=array("Mejor_de_lo_esperado" => $time);
+    $reason=drush_prompt("Indiquea el motivo de porque ha ido bien
+    4 He encontrado una herramienta que me ha ayudado
+    5 Otros");
+    if ($reason==4) {
+      $reasonArray=array("He_encontrado_una_herramienta_que_me_ha_ayudado" => $reason);
+    }
+    else {
+      $reasonArray=array("Otros" => $reason);
+    }
   }
   else {
-    drush_prompt("No se ha creado el archivo");
-    drush_shell_exec_interactive('^[');
-  }   
+    $time=0;
+    $reason=0;
+    $timeArray=array("Lo_esperado" => $time);
+    $reasonArray=array("No_hay_motivo" => $reason);
+  }
+  $datos=array ($timeArray, $reasonArray);  
+  $datosenjson=json_encode($datos);
+  print_r($datosenjson);
+  drush_shell_exec_interactive('git checkout master');
+  drush_shell_exec_interactive('git merge -m "'.$idtask.'" -m "'.$datosenjson.'" --no-ff '.$idtask);
 }
 
 /**
