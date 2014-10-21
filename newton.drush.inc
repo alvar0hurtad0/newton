@@ -118,7 +118,7 @@ function drush_newton($number = NULL) {
  * initfeature command callback.
  */
 function drush_newton_initfeature () {
-  $id=drush_prompt("What's the ID of de Task? Indicates 0 if the task isn't ");
+  $id=drush_prompt("What's the ID of de Task?");
   $description=drush_prompt("What's the description of the task?");
   $description=mb_substr($description,0,50);
   $characters=array(" :",": ",":","- ", " -","-"," ");
