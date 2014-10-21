@@ -122,8 +122,8 @@ function drush_newton_initfeature () {
   $description=mb_substr($description,0,50);
   $characters=array(" :",": ",":","- ", " -","-"," ");
   $description=str_replace($characters,"_",$description);
-  $idtask=$id."-".$description;
-  drush_shell_exec_interactive('git checkout -b '.$idtask);
+  $idTask=$id."-".$description;
+  drush_shell_exec_interactive('git checkout -b '.$idTask);
 }
 
 /**
@@ -132,54 +132,59 @@ function drush_newton_initfeature () {
 function drush_newton_endfeature () {
   drush_shell_exec('git branch --list');
   $lines=drush_shell_exec_output();
-  foreach ($lines as $valor)  {
-    if (preg_match("/  /i", $valor)==0) {
-      $idtask=substr($valor,2);
+  foreach ($lines as $value)  {
+    if (preg_match("/  /i", $value)==0) {
+      $idTask=substr($value,2);
     }
   }  
-  $time=drush_prompt("Ha ido como esperabas? Por favor Indica
-  0 Lo esperado
-  1 Mejor de lo esperado 
-  2 Peor de lo esperado");
-  if ($time==2) {
-    $timeArray=array("Peor_de_lo_esperado" => $time);
-    $reason=drush_prompt("Indique el motivo de su retraso
-    1 Falta de comunicaciÃn con el cliente
-    2 La tarea no estaba bien planteada
-    3 Otros");
-    if ($reason==1) {
-      $reasonArray=array("Falta_de_comucnicacion_con_el_cliente" => $reason);
-    }
-    elseif ($reason==2) {
-      $reasonArray=array("La_tarea_no_estaba_bien_planteada" => $reason);
-    }
-    else {
-      $reasonArray=array("Otros" => $reason);
-    }
+  $time=drush_prompt("How has been the task? 
+  1 Expected
+  2 Better than expected
+  3 Worse than expected");
+  switch ($time) {
+    case 1:
+      $time=1;
+      $reason=6;
+      $timeArray=array("Expected" => $time);
+      $reasonArray=array("There_is_no_reason" => $reason);
+      break;
+    case 2:
+      $timeArray=array("Better_than_expected" => $time);
+      $reason=drush_prompt("Why reason?
+      1 I found a tool that has helped me
+      2 Others");
+      switch ($reason) {
+        case 1:
+          $reasonArray=array("I_found_a_tool_that_has_helped_me" => $reason);
+          break;
+        case 2:
+          $reasonArray=array("Others" => $reason);
+          break;
+      }
+      break;
+    case 3:
+      $timeArray=array("Worse_than_expected" => $time);
+      $reason=drush_prompt("Why reason?
+      3 Lack of communication with the customer
+      4 The task was not well planned
+      5 Others");
+      switch ($reason) {
+        case 3:
+          $reasonArray=array("Lack_of_communication_with_the_customer" => $reason);
+          break; 
+        case 4:
+          $reasonArray=array("The_task_was_not_well_planned" => $reason);
+          break;
+        case 5:
+          $reasonArray=array("Others" => $reason);
+          break;    
+      }
+      break;
   }
-  elseif ($time==1) {
-    $timeArray=array("Mejor_de_lo_esperado" => $time);
-    $reason=drush_prompt("Indiquea el motivo de porque ha ido bien
-    4 He encontrado una herramienta que me ha ayudado
-    5 Otros");
-    if ($reason==4) {
-      $reasonArray=array("He_encontrado_una_herramienta_que_me_ha_ayudado" => $reason);
-    }
-    else {
-      $reasonArray=array("Otros" => $reason);
-    }
-  }
-  else {
-    $time=0;
-    $reason=0;
-    $timeArray=array("Lo_esperado" => $time);
-    $reasonArray=array("No_hay_motivo" => $reason);
-  }
-  $datos=array ($timeArray, $reasonArray);  
-  $datosenjson=json_encode($datos);
-  print_r($datosenjson);
+  $data=array ($timeArray, $reasonArray);  
+  $dataJson=json_encode($data);
   drush_shell_exec_interactive('git checkout master');
-  drush_shell_exec_interactive('git merge -m "'.$idtask.'" -m "'.$datosenjson.'" --no-ff '.$idtask);
+  drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$idTask.'" -m "'.$dataJson.'"');
 }
 
 /**
