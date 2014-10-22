@@ -137,7 +137,9 @@ function drush_newton_endfeature () {
     if (preg_match("/  /i", $value)==0) {
       $idTask=substr($value,2);
     }
-  }  
+  }
+  $position=strpos($idTask,"-");
+  $id="#[".substr($idTask,0,$position)."]";
   $time=drush_prompt("How has been the task? 
   1 Expected
   2 Better than expected
@@ -146,44 +148,46 @@ function drush_newton_endfeature () {
     case 1:
       $time=1;
       $reason=6;
-      $timeArray=array("Expected" => $time);
-      $reasonArray=array("There_is_no_reason" => $reason);
+      $timeArray=array("how_was" => $time);
+      $reasonArray=array("reason" => $reason);
       break;
     case 2:
-      $timeArray=array("Better_than_expected" => $time);
+      $timeArray=array("how_was" => $time);
       $reason=drush_prompt("Why reason?
       1 I found a tool that has helped me
       2 Others");
       switch ($reason) {
         case 1:
-          $reasonArray=array("I_found_a_tool_that_has_helped_me" => $reason);
+          $reasonArray=array("reason" => $reason);
           break;
         case 2:
-          $reasonArray=array("Others" => $reason);
+          $reasonArray=array("reason" => $reason);
           break;
       }
       break;
     case 3:
-      $timeArray=array("Worse_than_expected" => $time);
+      $timeArray=array("how_was" => $time);
       $reason=drush_prompt("Why reason?
       3 Lack of communication with the customer
       4 The task was not well planned
       5 Others");
       switch ($reason) {
         case 3:
-          $reasonArray=array("Lack_of_communication_with_the_customer" => $reason);
+          $reasonArray=array("reason" => $reason);
           break; 
         case 4:
-          $reasonArray=array("The_task_was_not_well_planned" => $reason);
+          $reasonArray=array("reason" => $reason);
           break;
         case 5:
-          $reasonArray=array("Others" => $reason);
+          $reasonArray=array("reason" => $reason);
           break;    
       }
       break;
   }
-  $data=array ($timeArray, $reasonArray);  
+  $idArray=array("id" => $id);
+  $data=array ($idArray, $timeArray, $reasonArray);  
   $dataJson=json_encode($data);
+  print_r($dataJson);
   drush_shell_exec_interactive('git checkout master');
   drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$idTask.'" -m "'.$dataJson.'"');
 }
