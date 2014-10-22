@@ -118,7 +118,10 @@ function drush_newton($number = NULL) {
  * initfeature command callback.
  */
 function drush_newton_initfeature () {
-  $id=drush_prompt("What's the ID of de Task?");
+  $id=drush_prompt("What's the ID of de Task?",null,false);
+  if($id==null) {
+    $id=0;
+  }
   $description=drush_prompt("What's the description of the task?");
   $description=mb_substr($description,0,50);
   $characters=array(" :",": ",":","- ", " -","-"," ");
@@ -140,14 +143,16 @@ function drush_newton_endfeature () {
   }
   $position=strpos($idTask,"-");
   $id="#[".substr($idTask,0,$position)."]";
+  $description=substr($idTask,$position+1);
   $time=drush_prompt("How has been the task? 
   1 Expected
   2 Better than expected
-  3 Worse than expected");
+  3 Worse than expected
+  ");
   switch ($time) {
     case 1:
       $time=1;
-      $reason=6;
+      $reason=1;//No reason
       $timeArray=array("how_was" => $time);
       $reasonArray=array("reason" => $reason);
       break;
@@ -155,41 +160,25 @@ function drush_newton_endfeature () {
       $timeArray=array("how_was" => $time);
       $reason=drush_prompt("Why reason?
       1 I found a tool that has helped me
-      2 Others");
-      switch ($reason) {
-        case 1:
-          $reasonArray=array("reason" => $reason);
-          break;
-        case 2:
-          $reasonArray=array("reason" => $reason);
-          break;
-      }
-      break;
+      2 Others
+      ");
+      $reasonArray=array("reason" => $reason);
+      break;    
     case 3:
       $timeArray=array("how_was" => $time);
       $reason=drush_prompt("Why reason?
-      3 Lack of communication with the customer
-      4 The task was not well planned
-      5 Others");
-      switch ($reason) {
-        case 3:
-          $reasonArray=array("reason" => $reason);
-          break; 
-        case 4:
-          $reasonArray=array("reason" => $reason);
-          break;
-        case 5:
-          $reasonArray=array("reason" => $reason);
-          break;    
-      }
+      1 Lack of communication with the customer
+      2 The task was not well planned
+      3 Others
+      ");      
+      $reasonArray=array("reason" => $reason);
       break;
   }
   $idArray=array("id" => $id);
   $data=array ($idArray, $timeArray, $reasonArray);  
   $dataJson=json_encode($data);
-  print_r($dataJson);
   drush_shell_exec_interactive('git checkout master');
-  drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$idTask.'" -m "'.$dataJson.'"');
+  drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$id.' '.$description.'" -m "'.$dataJson.'"');
 }
 
 /**
