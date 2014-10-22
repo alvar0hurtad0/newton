@@ -118,8 +118,16 @@ function drush_newton($number = NULL) {
  * initfeature command callback.
  */
 function drush_newton_initfeature () {
-  $idtask=drush_prompt("What´s the name of the task, please");
-  drush_shell_exec_interactive('git checkout -b '. $idtask);
+  $id=drush_prompt("What's the ID of de Task?",null,false);
+  if($id==null) {
+    $id=0;
+  }
+  $description=drush_prompt("What's the description of the task?");
+  $description=mb_substr($description,0,50);
+  $characters=array(" :",": ",":","- ", " -","-"," ");
+  $description=str_replace($characters,"_",$description);
+  $idTask=$id."-".$description;
+  drush_shell_exec_interactive('git checkout -b '.$idTask);
 }
 
 /**
@@ -128,13 +136,48 @@ function drush_newton_initfeature () {
 function drush_newton_endfeature () {
   drush_shell_exec('git branch --list');
   $lines=drush_shell_exec_output();
-  foreach ($lines as $valor)  {
-    if (preg_match("/  /i", $valor)==0) {
-      $idtask=substr($valor,2);
+  foreach ($lines as $value)  {
+    if (preg_match("/  /i", $value)==0) {
+      $idTask=substr($value,2);
     }
   }
+  $position=strpos($idTask,"-");
+  $id="#[".substr($idTask,0,$position)."]";
+  $description=substr($idTask,$position+1);
+  $time=drush_prompt("How has been the task? 
+  1 Expected
+  2 Better than expected
+  3 Worse than expected
+  ");
+  switch ($time) {
+    case 1:
+      $reason=1;//No reason
+      $timeArray=array("how_was" => $time);
+      $reasonArray=array("reason" => $reason);
+      break;
+    case 2:
+      $timeArray=array("how_was" => $time);
+      $reason=drush_prompt("Why reason?
+      1 I found a tool that has helped me
+      2 Others
+      ");
+      $reasonArray=array("reason" => $reason);
+      break;    
+    case 3:
+      $timeArray=array("how_was" => $time);
+      $reason=drush_prompt("Why reason?
+      1 Lack of communication with the customer
+      2 The task was not well planned
+      3 Others
+      ");      
+      $reasonArray=array("reason" => $reason);
+      break;
+  }
+  $idArray=array("id" => $id);
+  $data=array ($idArray, $timeArray, $reasonArray);  
+  $dataJson=json_encode($data);
   drush_shell_exec_interactive('git checkout master');
-  drush_shell_exec_interactive('git merge '.$idtask);
+  drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$id.' '.$description.'" -m "'.$dataJson.'"');
 }
 
 /**
