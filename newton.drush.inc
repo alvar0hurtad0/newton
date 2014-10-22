@@ -180,10 +180,10 @@ function drush_newton_endfeature () {
   y Yes
   n No
   ",null,false);
+  drush_shell_exec_interactive('git checkout master');
   if ($reorganize=="y") {
     drush_shell_exec_interactive('git rebase -i');
   }
-  drush_shell_exec_interactive('git checkout master');
   drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$id.' '.$description.'" -m "'.$dataJson.'"');
 }
 
