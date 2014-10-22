@@ -151,7 +151,6 @@ function drush_newton_endfeature () {
   ");
   switch ($time) {
     case 1:
-      $time=1;
       $reason=1;//No reason
       $timeArray=array("how_was" => $time);
       $reasonArray=array("reason" => $reason);
