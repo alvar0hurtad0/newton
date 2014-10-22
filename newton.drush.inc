@@ -176,6 +176,13 @@ function drush_newton_endfeature () {
   $idArray=array("id" => $id);
   $data=array ($idArray, $timeArray, $reasonArray);  
   $dataJson=json_encode($data);
+  $reorganize=drush_prompt("Whan reorganize commit?
+  y Yes
+  n No
+  ",null,false);
+  if ($reorganize=="y") {
+    drush_shell_exec_interactive('git rebase -i');
+  }
   drush_shell_exec_interactive('git checkout master');
   drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$id.' '.$description.'" -m "'.$dataJson.'"');
 }
