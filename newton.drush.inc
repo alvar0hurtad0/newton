@@ -128,6 +128,7 @@ function drush_newton_initfeature () {
   $description=str_replace($characters,"_",$description);
   $idTask=$id."-".$description;
   drush_shell_exec_interactive('git checkout -b '.$idTask);
+  drush_shell_exec_interactive('git tag init-'.$idTask);
 }
 
 /**
@@ -176,6 +177,13 @@ function drush_newton_endfeature () {
   $idArray=array("id" => $id);
   $data=array ($idArray, $timeArray, $reasonArray);  
   $dataJson=json_encode($data);
+  $reorganize=drush_prompt("Do you want to reorganize commits?
+  y Yes
+  n No
+  ",null,false);
+  if ($reorganize=="y") {
+    drush_shell_exec_interactive('git rebase -i init-'.$idTask);
+  }
   drush_shell_exec_interactive('git checkout master');
   drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$id.' '.$description.'" -m "'.$dataJson.'"');
 }
