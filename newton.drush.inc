@@ -1,14 +1,13 @@
 <?php
 
 /**
- * Implementation of hook_drush_command().
+ * implementation of hook_drush_command()
  */
 function newton_drush_command() {
   $items['newton'] = array(
     'description' => 'Shows all newton commands',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-
   $items['initfeature']= array(
     'description' => 'Create a new task',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
@@ -17,7 +16,13 @@ function newton_drush_command() {
     'description' => 'Ends a task',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-
+  $items['generate_history']=array(
+    'description' => 'Create a file with all data',
+    'arguments' => array ('json or cvs' => 'filetype you want to use,'
+    ),
+    'required-arguments' => FALSE,
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
   $items['capasao'] = array(
     'description' => 'Shows a git log --reverse --oneline --graph',
     'examples' => array(
@@ -106,6 +111,7 @@ function drush_newton($number = NULL) {
   drush_print ('newton       -> shows this help',2);
   drush_print ('initfeature  -> Create a new task',2);
   drush_print ('endfeature   -> Ends a task',2);
+  drush_print ('generate_history  -> Create a file with all data',2);
   drush_print ('capasao      -> shows a log with colors and arrows about the git repository',2);
   drush_print ('n-init       -> kickstart a project',2);
   drush_print ('join2project -> ask about an existing projet to clone the repository and give database',2);
@@ -143,7 +149,7 @@ function drush_newton_endfeature () {
     }
   }
   $position=strpos($idTask,"-");
-  $id="#[".substr($idTask,0,$position)."]";
+  $id="[#".substr($idTask,0,$position)."]";
   $description=substr($idTask,$position+1);
   $time=drush_prompt("How has been the task? 
   1 Expected
@@ -175,8 +181,9 @@ function drush_newton_endfeature () {
       break;
   }
   $idArray=array("id" => $id);
-  $data=array ($idArray, $timeArray, $reasonArray);  
+  $data=array_merge ($idArray, $timeArray, $reasonArray);  
   $dataJson=json_encode($data);
+  print_r($dataJson);
   $reorganize=drush_prompt("Do you want to reorganize commits?
   y Yes
   n No
@@ -186,6 +193,51 @@ function drush_newton_endfeature () {
   }
   drush_shell_exec_interactive('git checkout master');
   drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$id.' '.$description.'" -m "'.$dataJson.'"');
+}
+
+/**
+ * generate_history command callback
+ */
+function drush_newton_generate_history ($format='csv') {
+  $file=drush_prompt("What's the filename?");
+  drush_shell_exec('git log --grep="^\[#"');
+  $first="id";
+  $second="how_was";
+  $third="reason";
+  $lines=drush_shell_exec_output();
+  foreach ($lines as $value)  {
+    if (preg_match("/^    \{/i", $value)) {
+      $value=substr($value,4);
+      $subarray=substr($value,1);
+      $subarray=substr($subarray,0,strlen($subarray)-1);  
+      $subarray=explode(",",$subarray);
+      for($i=0;$i<3;$i++) {
+        $array[$i]=explode(":" ,$subarray[$i]);
+      }
+      print_r($array);  
+      switch ($format) {
+        case 'json':
+        $string.=$value.",";
+        break;
+        case 'csv' :
+        $first.=",".$array[0][1];
+        $second.=",".$array[1][1];
+        $third.=",".$array[2][1];
+        break;
+      }
+    } 
+  }
+  if ($format=='csv') {
+  $strin=$first."\n".$second."\n".$third;
+  $fp=fopen($file,"w");
+  fwrite($fp,$strin);
+  fclose($fp);
+  }
+else{
+$fp=fopen($file,"w");
+fwrite ($fp,$string);
+fclose($fp);
+}
 }
 
 /**
