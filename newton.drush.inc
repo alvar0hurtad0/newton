@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Implementation of hook_drush_command()
+ *  Implementation of hook_drush_command()
  */
 function newton_drush_command() {
   $items['newton'] = array(
@@ -192,7 +192,7 @@ function drush_newton_endfeature () {
     drush_shell_exec_interactive('git rebase -i init-'.$idTask);
   }
   drush_shell_exec_interactive('git checkout master');
-  drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$id.' '.$description.'" -m "'.$dataJson.'"');
+  drush_shell_exec_interactive('git merge --no-ff '.$idTask.' -m "'.$id.' '.$description.'" -m "'.$data.'"');
 }
 
 /**
