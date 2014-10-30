@@ -1,7 +1,7 @@
 <?php
 
 /**
- * implementation of hook_drush_command()
+ *  Implementation of hook_drush_command()
  */
 function newton_drush_command() {
   $items['newton'] = array(
@@ -183,7 +183,6 @@ function drush_newton_endfeature () {
   $idArray=array("id" => $id);
   $data=array_merge ($idArray, $timeArray, $reasonArray);  
   $dataJson=json_encode($data);
-  print_r($dataJson);
   $reorganize=drush_prompt("Do you want to reorganize commits?
   y Yes
   n No
@@ -198,12 +197,12 @@ function drush_newton_endfeature () {
 /**
  * generate_history command callback
  */
-function drush_newton_generate_history ($format='csv') {
+function drush_newton_generate_history ($format='json') {
   $file=drush_prompt("What's the filename?");
   drush_shell_exec('git log --grep="^\[#"');
-  $first="id";
-  $second="how_was";
-  $third="reason";
+  $firstLine="id";
+  $secondLine="how_was";
+  $thirdLine="reason";
   $lines=drush_shell_exec_output();
   foreach ($lines as $value)  {
     if (preg_match("/^    \{/i", $value)) {
@@ -213,31 +212,31 @@ function drush_newton_generate_history ($format='csv') {
       $subarray=explode(",",$subarray);
       for($i=0;$i<3;$i++) {
         $array[$i]=explode(":" ,$subarray[$i]);
-      }
-      print_r($array);  
+      } 
       switch ($format) {
         case 'json':
-        $string.=$value.",";
+        $string.=$value.", ";
         break;
         case 'csv' :
-        $first.=",".$array[0][1];
-        $second.=",".$array[1][1];
-        $third.=",".$array[2][1];
+        $firstLine.=", ".$array[0][1];
+        $secondLine.=", ".$array[1][1];
+        $thirdLine.=", ".$array[2][1];
         break;
       }
     } 
   }
   if ($format=='csv') {
-  $strin=$first."\n".$second."\n".$third;
-  $fp=fopen($file,"w");
-  fwrite($fp,$strin);
-  fclose($fp);
+    $string=$firstLine."\n".$secondLine."\n".$thirdLine;
+    $fp=fopen($file,"w");
+    fwrite($fp,$string);
+    fclose($fp);
   }
-else{
-$fp=fopen($file,"w");
-fwrite ($fp,$string);
-fclose($fp);
-}
+  else {
+    $string=substr($string,0,strlen($string)-2);
+    $fp=fopen($file,"w");
+    fwrite ($fp,$string);
+    fclose($fp);
+  }
 }
 
 /**
