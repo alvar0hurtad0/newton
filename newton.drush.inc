@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  Implementation of hook_drush_command()
+ * Implementation of hook_drush_command()
  */
 function newton_drush_command() {
   $items['newton'] = array(
@@ -17,8 +17,8 @@ function newton_drush_command() {
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
   $items['generate_history']=array(
-    'description' => 'Create a file with all data',
-    'arguments' => array ('json or cvs' => 'filetype you want to use,'
+    'description' => 'Creates a file with statistical data on the task in json',
+    'arguments' => array ('csv' => 'If the filetype you want to use is csv'
     ),
     'required-arguments' => FALSE,
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
@@ -58,6 +58,10 @@ function newton_drush_command() {
   );
   $items['join2project'] = array(
     'description' => 'ask about cuestions for joining existing project',
+    'arguments' => array (
+      'URL' => 'The URL indicator',
+    ),
+    'requiered-arguments' => FALSE,
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
 
@@ -149,7 +153,7 @@ function drush_newton_endfeature () {
     }
   }
   $position=strpos($idTask,"-");
-  $id="[#".substr($idTask,0,$position)."]";
+  $id='"[#'.substr($idTask,0,$position).']"';
   $description=substr($idTask,$position+1);
   $time=drush_prompt("How has been the task? 
   1 Expected
@@ -159,28 +163,28 @@ function drush_newton_endfeature () {
   switch ($time) {
     case 1:
       $reason=1;//No reason
-      $timeArray=array("how_was" => $time);
-      $reasonArray=array("reason" => $reason);
+      $timeArray=array('"how_was"' => $time);
+      $reasonArray=array('"reason"' => $reason);
       break;
     case 2:
-      $timeArray=array("how_was" => $time);
+      $timeArray=array('"how_was"' => $time);
       $reason=drush_prompt("Why reason?
       1 I found a tool that has helped me
       2 Others
       ");
-      $reasonArray=array("reason" => $reason);
+      $reasonArray=array('"reason"' => $reason);
       break;    
     case 3:
-      $timeArray=array("how_was" => $time);
+      $timeArray=array('"how_was"' => $time);
       $reason=drush_prompt("Why reason?
       1 Lack of communication with the customer
       2 The task was not well planned
       3 Others
       ");      
-      $reasonArray=array("reason" => $reason);
+      $reasonArray=array('"reason"' => $reason);
       break;
   }
-  $idArray=array("id" => $id);
+  $idArray=array('"id"' => $id);
   $data=array_merge ($idArray, $timeArray, $reasonArray);  
   $dataJson=json_encode($data);
   $reorganize=drush_prompt("Do you want to reorganize commits?
@@ -200,39 +204,30 @@ function drush_newton_endfeature () {
 function drush_newton_generate_history ($format='json') {
   $file=drush_prompt("What's the filename?");
   drush_shell_exec('git log --grep="^\[#"');
-  $firstLine="id";
-  $secondLine="how_was";
-  $thirdLine="reason";
   $lines=drush_shell_exec_output();
   foreach ($lines as $value)  {
     if (preg_match("/^    \{/i", $value)) {
-      $value=substr($value,4);
-      $subarray=substr($value,1);
-      $subarray=substr($subarray,0,strlen($subarray)-1);  
-      $subarray=explode(",",$subarray);
-      for($i=0;$i<3;$i++) {
-        $array[$i]=explode(":" ,$subarray[$i]);
-      } 
-      switch ($format) {
-        case 'json':
-        $string.=$value.", ";
-        break;
-        case 'csv' :
-        $firstLine.=", ".$array[0][1];
-        $secondLine.=", ".$array[1][1];
-        $thirdLine.=", ".$array[2][1];
-        break;
-      }
+      $string.=substr($value,4).", ";
     } 
   }
-  if ($format=='csv') {
-    $string=$firstLine."\n".$secondLine."\n".$thirdLine;
-    $fp=fopen($file,"w");
-    fwrite($fp,$string);
+  $string='['.substr($string,0,strlen($string)-2).']';  
+  if ($format=='csv') { 
+    $decode=json_decode($string,true);
+    $fp = fopen($file, "w");
+    $firstLine= false;
+    foreach ($decode as $line)
+    {
+      if (empty($firstLine)) {
+        $firstLine=array_keys($line);
+        fputcsv($fp, $firstLine);
+        $firstLine=array_flip($firstLine);
+      }
+      fputcsv($fp,array_merge($firstLine,$line));
+    }
     fclose($fp);
   }
   else {
-    $string=substr($string,0,strlen($string)-2);
+    $string=substr($string,0,strlen($string));
     $fp=fopen($file,"w");
     fwrite ($fp,$string);
     fclose($fp);
@@ -323,9 +318,13 @@ function drush_newton_n_init() {
 /**
  * join2project command callback.
  */
-function drush_newton_join2project() {
-  $git_repository = drush_prompt("What's the URL of remote git repository");
-
+function drush_newton_join2project($url=NULL) {
+  if ($url==NULL){
+    $git_repository = drush_prompt("What's the URL of remote git repository");
+  }
+  else{
+    $git_repository= $url;
+  }
   $pieces=explode('/',$git_repository);
   $size=sizeof($pieces);
   $last=$pieces[$size -1 ];
