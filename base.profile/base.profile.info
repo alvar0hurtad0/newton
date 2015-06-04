@@ -1,0 +1,4 @@
+name = [base.profile]
+description = Profile [base.profile]
+core = 7.x
+exclusive = true
