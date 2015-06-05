@@ -1,6 +1,6 @@
 <?php
 
-global $green = "\033[0;33;40m\033[1m[%s]\033[0m";
+$green = "\033[0;33;40m\033[1m[%s]\033[0m";
 
 /**
  * Implementation of hook_drush_command()

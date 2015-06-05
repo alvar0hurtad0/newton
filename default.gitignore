@@ -1,4 +1,6 @@
 # Ignore all contribfiles
-httpdocs
+httpdocs/*
+!httpdocs/profiles/
 
+httpdocs/profiles/*
 ~/httpdocs/profiles/[base.profile]/
