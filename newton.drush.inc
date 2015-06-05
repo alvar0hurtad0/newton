@@ -330,6 +330,7 @@ function drush_newton_n_init() {
 
   // sed -i 's/[base.profile]/profile_name/' path_to_profile/profile_name.info
   drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.info');
+  drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.install');
 
   // create profile structure
   drush_shell_exec('mkdir '.$project_name.'/httpdocs/profiles/' . $profile_name . '/modules');
