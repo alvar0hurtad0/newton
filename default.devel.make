@@ -7,5 +7,4 @@ api = 2
 projects[devel][subdir] = "contrib"
 projects[fpa][subdir] = "contrib"
 projects[stage_file_proxy][subdir] = "contrib"
-projects[coder][subdir] = "contrib"
 projects[coffee][subdir] = "contrib"
