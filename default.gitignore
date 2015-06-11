@@ -3,4 +3,4 @@ httpdocs/*
 !httpdocs/profiles/
 
 httpdocs/profiles/*
-~/httpdocs/profiles/[base.profile]/
+!/httpdocs/profiles/[base.profile]/
