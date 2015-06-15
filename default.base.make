@@ -4,7 +4,7 @@
 api = 2
 core = 7.x
 
-projects[l10n_install][type] = core
+projects[drupal][type] = core
 
 projects[views][subdir] = "contrib"
 projects[ctools][subdir] = "contrib"
