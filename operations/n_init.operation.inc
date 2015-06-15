@@ -18,9 +18,9 @@ function drush_newton_n_init() {
 
   // Copying default makefiles
   drush_print (sprintf($green, dt('Copying default makefiles '.$previous_branch)));
-  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/default.base.make ' . $project_name . '/makefiles/base.make');
-  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/default.devel.make ' . $project_name . '/makefiles/devel.make');
-  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/default.contrib.make ' . $project_name . '/makefiles/contrib.make');
+  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/makefiles/default.base.make ' . $project_name . '/makefiles/base.make');
+  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/makefiles/default.devel.make ' . $project_name . '/makefiles/devel.make');
+  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/makefiles/default.contrib.make ' . $project_name . '/makefiles/contrib.make');
 
   // Building project
   drush_print (sprintf($green, dt('Building project ')));
