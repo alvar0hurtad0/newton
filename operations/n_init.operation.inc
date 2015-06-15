@@ -60,7 +60,8 @@ function drush_newton_n_init() {
   $admin_pass = drush_prompt("The admin password (secret password if blank)", $random);
   $site_name = drush_prompt("The name of the website, please (Project Name will be used if blank)",$project_name);
   $site_email = drush_prompt("Sites email (my@example.com if blank)",'my@example.com');
-  $database_user = drush_prompt("Database user for THIS project (project name if blank)",$project_name);
+  $database_user = drush_prompt("Database user for THIS project (profile name if blank and should be no longer than 16; if longer, it will be trimmed to 16 characters)",$profile_name);
+  $database_user = substr($database_user,0,16);
   $database_user_pw = drush_prompt("Database user PASSWORD for this project (secret password if blank)",$random);
   $database_root = drush_prompt("Database super-user (root if blank)",'root');
   $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
