@@ -1,0 +1,18 @@
+general:
+  description: 'Rebuilds local development environment from remote destination'
+  uli: false
+drupal:
+  modules:
+    disable:
+      - devel
+      - syslog
+      - stage_file_proxy
+      - diff
+      - features_diff
+      - mail_redirect
+      - fpa
+      - module_filter
+  variables:
+    set:
+      preprocess_js: 1
+      preprocess_css: 1
