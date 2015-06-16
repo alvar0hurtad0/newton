@@ -7,7 +7,7 @@ function drush_newton_n_init() {
   global $green;
 
   $project_name = drush_prompt("What's the name of the project, please (remember customer-project)");
-  $profile_name = ereg_replace('-', '_', $project_name);
+  $profile_name = str_replace('-', '_', $project_name);
 
   // Creating project structure
   drush_print (sprintf($green, dt('Creating project structure ')));
