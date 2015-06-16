@@ -15,12 +15,13 @@ function drush_newton_n_init() {
   drush_shell_exec('mkdir '.$project_name.'/makefiles');
   drush_shell_exec('mkdir '.$project_name.'/tests');
   drush_shell_exec('mkdir '.$project_name.'/patches');
+  drush_shell_exec('mkdir '.$project_name.'/rebuild_info');
 
   // Copying default makefiles
-  drush_print (sprintf($green, dt('Copying default makefiles '.$previous_branch)));
-  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/default.base.make ' . $project_name . '/makefiles/base.make');
-  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/default.devel.make ' . $project_name . '/makefiles/devel.make');
-  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/default.contrib.make ' . $project_name . '/makefiles/contrib.make');
+  drush_print (sprintf($green, dt('Copying default makefiles ')));
+  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/makefiles/default.base.make ' . $project_name . '/makefiles/base.make');
+  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/makefiles/default.devel.make ' . $project_name . '/makefiles/devel.make');
+  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/makefiles/default.contrib.make ' . $project_name . '/makefiles/contrib.make');
 
   // Building project
   drush_print (sprintf($green, dt('Building project ')));
@@ -32,6 +33,10 @@ function drush_newton_n_init() {
   drush_print ('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/.gitignore');
   drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/default.gitignore ' . $project_name . '/.gitignore');
   drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/.gitignore');
+
+  // Copy rebuild info for environment
+  drush_print (sprintf($green, dt('Copying rebuild info')));
+  drush_shell_exec_interactive('cp ' . $NEWTON_PATH . '/rebuild_info/* ' . $project_name . '/rebuild_info/');
 
   // Creating instalation profile
   drush_print (sprintf($green, dt('Creating instalation profile ')));
