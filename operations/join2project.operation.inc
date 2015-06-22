@@ -30,7 +30,7 @@ function drush_newton_join2project($url=NULL) {
   // Check if project is based on makefiles
   if (is_dir("$project_name/makefiles")) {
     drush_print('Building project based on makefiles');
-    drush_shell_exec_interactive('drush make ' . $project_name . '/makefiles/base.make ' . $project_name . '/httpdocs');
+    drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && drush make ../makefiles/base.make --yes');
     drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && drush make --no-core ../makefiles/contrib.make --yes');
     drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && drush make --no-core ../makefiles/devel.make --yes');
   } else {
