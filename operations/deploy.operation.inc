@@ -36,7 +36,7 @@ function drush_newton_deploy($environment='pre') {
       return;
     }
 
-    drush_print(sprintf($green, dt('git checkout @default'.$environment)));
+    drush_print(sprintf($green, dt('git checkout '.$environment)));
     drush_shell_exec_interactive('git checkout '.$environment);
     $continue = drush_prompt("continue?????", 'yes');
     if ($continue != "yes") {
