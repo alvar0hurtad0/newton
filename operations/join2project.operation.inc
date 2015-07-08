@@ -15,8 +15,6 @@ function drush_newton_join2project($url=NULL) {
   $last=$pieces[$size -1 ];
   $pieces_last=explode('.',$last);
   $project_name = $pieces_last[0];
-
-  $project_name = drush_prompt("What's the project name", $project_name);
   $profile_name = str_replace('-', '_', $project_name);
 
   //Must check if directory exits before clone the repository
