@@ -1,0 +1,7 @@
+name = display_modes_feature
+description = display modes defined in display suite
+core = 7.x
+package = global
+version = 7.x-1.0
+features[features_api][] = api:2
+project path = profiles/aspgems_test/modules/features

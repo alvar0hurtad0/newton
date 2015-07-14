@@ -1,0 +1,7 @@
+name = image_styles_feature
+description = global image styles defined
+core = 7.x
+package = global
+version = 7.x-1.0
+features[features_api][] = api:2
+project path = profiles/aspgems_test/modules/features

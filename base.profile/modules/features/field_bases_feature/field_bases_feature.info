@@ -1,0 +1,10 @@
+name = field_bases_feature
+description = Field bases for reusing purposes
+core = 7.x
+package = global
+version = 7.x-1.0
+dependencies[] = features
+dependencies[] = image
+features[features_api][] = api:2
+features[field_base][] = field_main_picture
+project path = profiles/aspgems_test/modules/features
