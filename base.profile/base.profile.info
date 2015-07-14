@@ -30,6 +30,7 @@ dependencies[] = admin_menu_toolbar
 dependencies[] = views
 dependencies[] = token
 dependencies[] = ctools
+dependencies[] = libraries
 dependencies[] = pathauto
 dependencies[] = wysiwyg
 dependencies[] = features
