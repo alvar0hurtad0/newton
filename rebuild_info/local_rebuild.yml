@@ -12,6 +12,7 @@ drupal:
       - mail_redirect
       - fpa
       - module_filter
+      - views_ui
   variables:
     set:
       preprocess_js: 0

@@ -8,6 +8,7 @@ projects[drupal][type] = core
 
 projects[views][subdir] = "contrib"
 projects[ctools][subdir] = "contrib"
+projects[context][subdir] = "contrib"
 projects[token][subdir] = "contrib"
 projects[pathauto][subdir] = "contrib"
 projects[admin_menu][subdir] = "contrib"

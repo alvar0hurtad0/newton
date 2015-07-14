@@ -4,3 +4,4 @@ httpdocs/*
 
 httpdocs/profiles/*
 !/httpdocs/profiles/[base.profile]/
+

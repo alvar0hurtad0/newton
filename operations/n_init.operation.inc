@@ -65,4 +65,15 @@ function drush_newton_n_init() {
   $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
 
   drush_shell_exec_interactive("cd $project_name/httpdocs && drush site-install $profile_name --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$profile_name");
+
+  // Init repository
+  drush_print (sprintf($green, dt('Repository init')));
+  drush_shell_exec_interactive ("cd $project_name && git init");
+
+  // copy drush config and build developmet environment
+  drush_print (sprintf($green, dt('Initializing drush alias')));
+  drush_shell_exec_interactive('cp -r ' . $NEWTON_PATH . '/drush ' . $project_name);
+  drush_shell_exec('sed -i \'s/\[project-name\]/' . $project_name . '/\' ' .$project_name. '/drush/aliases/default.aliases.drushrc.php');
+  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local");
 }
+
