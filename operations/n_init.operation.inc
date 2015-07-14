@@ -75,5 +75,9 @@ function drush_newton_n_init() {
   drush_shell_exec_interactive('cp -r ' . $NEWTON_PATH . '/drush ' . $project_name);
   drush_shell_exec('sed -i \'s/\[project-name\]/' . $project_name . '/\' ' .$project_name. '/drush/aliases/default.aliases.drushrc.php');
   drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local");
+
+  // Create omega subtheme and set as default
+  drush_print (sprintf($green, dt('Initializing drush alias')));
+  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush omega-subtheme $project_name --destination=profiles/$profile_name/themes/custom --set-default");
 }
 
