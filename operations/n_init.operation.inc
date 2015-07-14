@@ -51,13 +51,6 @@ function drush_newton_n_init() {
   drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.info');
   drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.install');
 
-  // create profile structure
-  drush_shell_exec('mkdir '.$project_name.'/httpdocs/profiles/' . $profile_name . '/modules');
-  drush_shell_exec('mkdir '.$project_name.'/httpdocs/profiles/' . $profile_name . '/modules/custom');
-  drush_shell_exec('mkdir '.$project_name.'/httpdocs/profiles/' . $profile_name . '/modules/features');
-  drush_shell_exec('mkdir '.$project_name.'/httpdocs/profiles/' . $profile_name . '/themes');
-  drush_shell_exec('mkdir '.$project_name.'/httpdocs/profiles/' . $profile_name . '/themes/custom');
-
   // install profile
   $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
 
