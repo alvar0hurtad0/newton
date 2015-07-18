@@ -38,6 +38,7 @@ function drush_newton_deploy($environment='pre') {
 
     drush_print(sprintf($green, dt('git checkout '.$environment)));
     drush_shell_exec_interactive('git checkout '.$environment);
+    drush_shell_exec_interactive('cd .'); // fix problems if the directory is new.
     $continue = drush_prompt("continue?????", 'yes');
     if ($continue != "yes") {
       return;
