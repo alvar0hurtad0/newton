@@ -4,6 +4,7 @@ general:
 drupal:
   modules:
     enable:
+      - context_ui
       - devel
       - syslog
       - stage_file_proxy
