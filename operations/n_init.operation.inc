@@ -13,8 +13,8 @@ function drush_newton_n_init() {
   drush_print (sprintf($green, dt('Creating project structure ')));
   drush_shell_exec_interactive('mkdir '.$project_name);
   drush_shell_exec('mkdir '.$project_name.'/makefiles');
-  drush_shell_exec('mkdir '.$project_name.'/tests');
-  drush_shell_exec('mkdir '.$project_name.'/patches');
+  drush_shell_exec('mkdir '.$project_name.'/tests && touch '.$project_name.'/tests/README.txt');
+  drush_shell_exec('mkdir '.$project_name.'/patches && touch '.$project_name.'/patches/README.txt');
   drush_shell_exec('mkdir '.$project_name.'/rebuild_info');
 
   // Copying default makefiles
