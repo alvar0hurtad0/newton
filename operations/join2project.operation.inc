@@ -23,6 +23,8 @@ function drush_newton_join2project($url=NULL) {
   } else {
     drush_print('I am cloning the repository into your machine, it can take a bit of time');
     drush_shell_exec_interactive('git clone ' . $git_repository . ' ' . $project_name);
+    drush_print('Checkout master...');
+    drush_shell_exec_interactive('cd ' . $project_name . ' && git checkout master');                                             drush_shell_exec_interactive('cd ' . $project_name . ' && git branch');
   }
 
   // Check if project is based on makefiles
