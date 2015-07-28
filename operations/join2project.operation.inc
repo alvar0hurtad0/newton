@@ -58,4 +58,5 @@ function drush_newton_join2project($url=NULL) {
   if ($synchronize == 'yes') {
     drush_shell_exec_interactive("cd $project_name/httpdocs && drush traepaca");
   }
+  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local");
 }
