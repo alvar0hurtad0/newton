@@ -19,7 +19,9 @@ function [base.profile]_install() {
   $new_user->name = 'editor';
   $new_user->pass = user_password(8); // random password.
   $new_user->mail = 'editor@example.com';
-  $new_user->roles = array ($role->rid => $role->name);
+  if ($role) {
+    $new_user->roles = array ($role->rid => $role->name);
+  } 
   $new_user->status = 1;
   $new_user->is_new = TRUE;
   user_save($new_user);
