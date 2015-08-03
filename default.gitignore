@@ -5,3 +5,6 @@ httpdocs/*
 httpdocs/profiles/*
 !/httpdocs/profiles/[base.profile]/
 
+# Mac Files
+
+.DS_Store
