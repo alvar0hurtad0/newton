@@ -101,11 +101,22 @@ function newton_drush_command() {
   $items['n-rollback'] = array(
     'description' => 'rollback the project to a concrete commit ID including database',
     'required-arguments' => FALSE,
-        'arguments' => array(
+    'arguments' => array(
       'environment' => 'The environment indicator',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
     'aliases' => array('marchaatras', 'patras'),
+  );
+
+  $items['n-rebuild'] = array(
+    'description' => 'rebuilds project and makefiles if required',
+    'required-arguments' => FALSE,
+    'options' => array(
+      'make-base' => 'Download core and run base.make',
+      'make-contrib' => 'Run contrib.make',
+      'make-devel' => 'Run devel.make',
+      'make-all' => 'Download core and run all makefiles'
+    ),
   );
 
   return $items;
@@ -125,3 +136,4 @@ include ('operations/newtonupdate.operation.inc');
 include ('operations/n_revert.operation.inc');
 include ('operations/n_rollback.operation.inc');
 include ('operations/n_snapshot.operation.inc');
+include ('operations/n_rebuild.operation.inc');
