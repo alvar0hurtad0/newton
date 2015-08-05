@@ -58,6 +58,9 @@ projects[strongarm][version] = "2.x"
 projects[smtp][subdir] = "contrib"
 projects[smtp][version] = "1.x"
 
+projects[views_bulk_operations] = "contrib"
+projects[views_bulk_operations] = "3.x"
+
 projects[admin_views][subdir] = "contrib"
 projects[adminimal_theme][subdir] = "contrib"
 
