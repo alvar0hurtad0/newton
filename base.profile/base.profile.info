@@ -15,7 +15,6 @@ dependencies[] = options
 dependencies[] = path
 dependencies[] = file
 dependencies[] = menu
-dependencies[] = blog
 dependencies[] = color 
 dependencies[] = number
 dependencies[] = dblog
