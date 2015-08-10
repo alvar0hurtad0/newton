@@ -115,7 +115,9 @@ function newton_drush_command() {
       'make-base' => 'Download core and run base.make',
       'make-contrib' => 'Run contrib.make',
       'make-devel' => 'Run devel.make',
-      'make-all' => 'Download core and run all makefiles'
+      'make-all' => 'Download core and run all makefiles',
+      'reinstall' => 'Reinstall the current profile',
+      'yes' => 'Yes to all in operations'
     ),
   );
 
