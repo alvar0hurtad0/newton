@@ -10,7 +10,6 @@ function drush_newton_n_rebuild () {
   $reinstall = drush_get_option('reinstall');
   $yes_to_all = drush_get_option('yes');
 
-
   $path_to_drupal = drush_get_context('DRUSH_DRUPAL_CORE');
 
   if ($yes_to_all) {
