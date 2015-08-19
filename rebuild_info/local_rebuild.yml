@@ -20,3 +20,4 @@ drupal:
       preprocess_css: 0
       mail_redirect_opt: address
       mail_redirect_address: drupales@aspgems.com
+      admin_theme: adminimal
