@@ -69,7 +69,7 @@ projects[omega][subdir] = "contrib"
 ; +++++ libraries +++++
 
 libraries[htmlpurifier][download][type] = "get"
-libraries[htmlpurifier][download][url] = "http://htmlpurifier.org/releases/htmlpurifier-4.6.0.tar.gz"
+libraries[htmlpurifier][download][url] = "http://htmlpurifier.org/releases/htmlpurifier-4.7.0.zip"
 libraries[htmlpurifier][destination] = "libraries"
 libraries[htmlpurifier][directory_name] = "htmlpurifier"
 
