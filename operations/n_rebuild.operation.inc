@@ -34,7 +34,7 @@ function drush_newton_n_rebuild () {
   }
   if ($make_devel || $make_all) {
     drush_print ('Downloading development modules');
-    drush_shell_cd_and_exec ($path_to_drupal, 'drush make ../makefiles/contrib.make --no-core --yes');
+    drush_shell_cd_and_exec ($path_to_drupal, 'drush make ../makefiles/devel.make --no-core --yes');
     $output = drush_shell_exec_output ();
     foreach ($output as $line) {
       drush_print ($line);
@@ -48,7 +48,7 @@ function drush_newton_n_rebuild () {
   else {
     drush_shell_exec_interactive ('drush registry-rebuild '.$extra_options);
   }
-  
+
   drush_shell_exec_interactive ('drush updb '.$extra_options);
   drush_shell_exec_interactive ('drush features-revert-all '.$extra_options);
   drush_shell_exec_interactive ('drush rebuild @default.local '.$extra_options);
