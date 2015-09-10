@@ -76,8 +76,20 @@ function drush_newton_n_init() {
   drush_shell_exec('sed -i \'s/\[project-name\]/' . $project_name . '/\' ' .$project_name. '/drush/aliases/default.aliases.drushrc.php');
   drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local");
 
-  // Create omega subtheme and set as default
-  drush_print (sprintf($green, dt('Initializing drush alias')));
-  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush omega-subtheme $project_name --destination=profiles/$profile_name/themes/custom --set-default");
+  $subtheme = drush_prompt("Do you want to create an Omega or a Bootstrap Subtheme?",'omega / bootstrap');
+  if ($subtheme == 'omega') {
+    // Create omega subtheme and set as default
+    drush_print (sprintf($green, dt('Creating and setting as default an Omega Subtheme...')));
+    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush omega-subtheme $project_name --destination=profiles/$profile_name/themes/custom --enable --set-default");
+    drush_shell_exec_interactive("cd $project_name/httpdocs && drush en $profile_name --yes");
+  } else {
+    // Create bootstrap subtheme and set as default
+    drush_print (sprintf($green, dt('Creating and setting as default a Bootstrap Subtheme...')));
+    drush_shell_exec_interactive ("cp -r $project_name/httpdocs/sites/all/themes/contrib/bootstrap/bootstrap_subtheme $project_name/httpdocs/profiles/$profile_name/themes/custom/$profile_name");
+    drush_shell_exec_interactive ('cd ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/themes/custom/' . $profile_name. ' && mv bootstrap_subtheme.info.starterkit ' . $profile_name .'.info');
+    drush_shell_exec('cd ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/themes/custom/' . $profile_name . '&& sed -i \'s/Bootstrap Sub-theme/' . $profile_name. '/gi\' ' . $profile_name .'.info');
+    drush_shell_exec_interactive("cd $project_name/httpdocs && drush vset theme_default $profile_name");
+    drush_shell_exec_interactive("cd $project_name/httpdocs && drush en $profile_name --yes");
+  }
 }
 

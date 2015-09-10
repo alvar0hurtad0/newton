@@ -62,9 +62,14 @@ projects[views_bulk_operations][subdir] = "contrib"
 projects[views_bulk_operations] = "3.x"
 
 projects[admin_views][subdir] = "contrib"
+
+; +++++ themes +++++
+
 projects[adminimal_theme][subdir] = "contrib"
 
 projects[omega][subdir] = "contrib"
+
+projects[bootstrap][subdir] = "contrib"
 
 ; +++++ libraries +++++
 
