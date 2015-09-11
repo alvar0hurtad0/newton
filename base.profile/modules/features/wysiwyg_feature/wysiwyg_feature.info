@@ -22,4 +22,4 @@ features[variable][] = htmlpurifier_version_ours
 features[wysiwyg][] = editor
 features[wysiwyg][] = filtered_html
 features[wysiwyg][] = full_html
-project path = sites/all/modules/features
+project path = profiles/[base.profile]/modules/features

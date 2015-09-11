@@ -26,4 +26,4 @@ features[user_permission][] = skip comment approval
 features[user_permission][] = use advanced search
 features[user_permission][] = view the administration theme
 features[user_role][] = editor
-project path = profiles/aspgems-test/modules/features
+project path = profiles/[base.profile]/modules/features

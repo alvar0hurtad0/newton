@@ -2,4 +2,4 @@ name = sitewide_feature
 core = 7.x
 package = global
 features[features_api][] = api:2
-project path = profiles/aspgems_test/modules/features
+project path = profiles/[base.profile]/modules/features

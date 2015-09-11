@@ -7,4 +7,4 @@ dependencies[] = features
 dependencies[] = image
 features[features_api][] = api:2
 features[field_base][] = field_main_picture
-project path = profiles/aspgems_test/modules/features
+project path = profiles/[base.profile]/modules/features

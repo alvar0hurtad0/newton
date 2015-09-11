@@ -45,9 +45,8 @@ function drush_newton_n_init() {
   // Creating instalation profile
   drush_print ('Creating instalation profile');
   drush_print ('----------------------------');
-  drush_shell_exec('mkdir '.$project_name.'/httpdocs/profiles');
-  drush_shell_exec_interactive('cp -r ' . $NEWTON_PATH . '/base.profile ' . $project_name . '/httpdocs/profiles');
-  drush_shell_exec('mv ' . $project_name . '/httpdocs/profiles/base.profile ' . $project_name . '/httpdocs/profiles/' . $profile_name);
+  drush_shell_exec('mkdir -p '.$project_name.'/httpdocs/profiles/' . $profile_name);
+  drush_shell_exec_interactive('cp -r ' . $NEWTON_PATH . '/base.profile/* ' . $project_name . '/httpdocs/profiles/' . $profile_name);
   drush_shell_exec('mv ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/base.profile.info ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.info');
   drush_shell_exec('mv ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/base.profile.profile ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.profile');
   drush_shell_exec('mv ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/base.profile.install ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.install');
@@ -55,6 +54,12 @@ function drush_newton_n_init() {
   // sed -i 's/[base.profile]/profile_name/' path_to_profile/profile_name.info
   drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.info');
   drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.install');
+  drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/gi\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/modules/features/display_modes_feature/display_modes_feature.info');
+  drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/gi\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/modules/features/field_bases_feature/field_bases_feature.info');
+  drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/gi\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/modules/features/image_styles_feature/image_styles_feature.info');
+  drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/gi\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/modules/features/roles_permissions_feature/roles_permissions_feature.info');
+  drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/gi\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/modules/features/sitewide_feature/sitewide_feature.info');
+  drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/gi\' ' .$project_name. '/httpdocs/profiles/' . $profile_name . '/modules/features/wysiwyg_feature/wysiwyg_feature.info');
 
   // install profile
   $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
