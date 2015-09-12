@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the path_features feature.
+ */
+
+include_once 'path_features.features.inc';

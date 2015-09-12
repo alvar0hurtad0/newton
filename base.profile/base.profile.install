@@ -9,7 +9,7 @@
 function [base.profile]_install() {
 
   // enable global features
-  $global_features = array ('display_modes_feature' , 'field_bases_feature' , 'image_styles_feature' , 'roles_permissions_feature' , 'sitewide_feature');
+  $global_features = array ('display_modes_feature' , 'field_bases_feature' , 'image_styles_feature' , 'path_features', 'roles_permissions_feature' , 'sitewide_feature');
   $enable_dependencies = TRUE;
   module_enable($global_features, $enable_dependencies);
 
