@@ -18,7 +18,6 @@ features[filter][] = filtered_html
 features[filter][] = full_html
 features[filter][] = plain_text
 features[user_permission][] = use text format editor
-features[variable][] = htmlpurifier_version_ours
 features[wysiwyg][] = editor
 features[wysiwyg][] = filtered_html
 features[wysiwyg][] = full_html

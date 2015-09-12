@@ -78,4 +78,7 @@ libraries[htmlpurifier][download][url] = "http://htmlpurifier.org/releases/htmlp
 libraries[htmlpurifier][destination] = "libraries"
 libraries[htmlpurifier][directory_name] = "htmlpurifier"
 
-
+libraries[ckeditor][download][type] = "get"
+libraries[ckeditor][download][url] = "http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.3/ckeditor_4.5.3_standard.zip"
+libraries[ckeditor][directory_name] = "ckeditor"
+libraries[ckeditor][type] = "library"

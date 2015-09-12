@@ -14,7 +14,7 @@ function wysiwyg_feature_user_default_permissions() {
   $permissions['use text format editor'] = array(
     'name' => 'use text format editor',
     'roles' => array(
-      'Editor' => 'Editor',
+      'editor' => 'editor',
     ),
     'module' => 'filter',
   );
