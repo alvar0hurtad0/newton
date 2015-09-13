@@ -70,7 +70,7 @@ function drush_newton_n_init() {
   $database_root = drush_prompt("Database super-user (root if blank)",'root');
   $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
 
-  drush_shell_exec_interactive("cd $project_name/httpdocs && drush site-install $profile_name --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$profile_name");
+  drush_shell_exec_interactive("cd $project_name/httpdocs && drush site-install $profile_name --site-name=$site_name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$profile_name");
 
   // Init repository
   drush_print (sprintf($msg_color, '[ Initializing repository ]'));
