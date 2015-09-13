@@ -1,7 +1,5 @@
 <?php
 
-$green = "\033[0;33;40m\033[1m[%s]\033[0m";
-
 /**
  * Implementation of hook_drush_command()
  */
@@ -66,7 +64,6 @@ function newton_drush_command() {
     'requiered-arguments' => FALSE,
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-
   $items['deploy'] = array(
     'description' => 'ask about cuestions for joining existing project',
     'arguments' => array(
@@ -107,7 +104,6 @@ function newton_drush_command() {
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
     'aliases' => array('marchaatras', 'patras'),
   );
-
   $items['n-rebuild'] = array(
     'description' => 'rebuilds project and makefiles if required',
     'required-arguments' => FALSE,
@@ -120,7 +116,11 @@ function newton_drush_command() {
       'yes' => 'Yes to all in operations'
     ),
   );
-
+  $items['addfuncionality'] = array(
+    'description' => 'add basic funcionalities based on developed features',
+    'required-arguments' => FALSE,
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+  );
   return $items;
 }
 
@@ -139,3 +139,4 @@ include ('operations/n_revert.operation.inc');
 include ('operations/n_rollback.operation.inc');
 include ('operations/n_snapshot.operation.inc');
 include ('operations/n_rebuild.operation.inc');
+include ('operations/addfuncionality.operation.inc');
