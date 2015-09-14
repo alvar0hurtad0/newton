@@ -119,11 +119,12 @@ function newton_drush_command() {
   $items['addfuncionality'] = array(
     'description' => 'add basic funcionalities based on developed features',
     'required-arguments' => FALSE,
-    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
   );
   return $items;
 }
 
+include ('includes/constants.includes.inc');
 include ('operations/newton.operation.inc');
 include ('operations/initfeature.operation.inc');
 include ('operations/endfeature.operation.inc');
