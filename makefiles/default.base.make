@@ -59,7 +59,7 @@ projects[smtp][subdir] = "contrib"
 projects[smtp][version] = "1.x"
 
 projects[views_bulk_operations][subdir] = "contrib"
-projects[views_bulk_operations] = "3.x"
+projects[views_bulk_operations][version] = "3.x"
 
 projects[admin_views][subdir] = "contrib"
 
