@@ -20,8 +20,6 @@ projects[diff][version] = "3.x"
 
 projects[features_diff][subdir] = "contrib"
 projects[mail_redirect][subdir] = "contrib"
-
 projects[module_filter][subdir] = "contrib"
-projects[module_filter][version] = "1.x"
 
 
