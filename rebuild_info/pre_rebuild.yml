@@ -9,7 +9,7 @@ drupal:
       - stage_file_proxy
       - diff
       - features_diff
-      - mail_redirect
+      - reroute_email
       - fpa
       - module_filter
   variables:

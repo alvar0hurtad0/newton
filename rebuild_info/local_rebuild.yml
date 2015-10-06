@@ -10,7 +10,7 @@ drupal:
       - stage_file_proxy
       - diff
       - features_diff
-      - mail_redirect
+      - reroute_email
       - fpa
       - module_filter
       - views_ui
@@ -18,4 +18,4 @@ drupal:
     set:
       preprocess_js: 0
       preprocess_css: 0
-     admin_theme: adminimal
+      admin_theme: adminimal
