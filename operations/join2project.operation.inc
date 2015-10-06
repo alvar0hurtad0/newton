@@ -21,29 +21,29 @@ function drush_newton_join2project($url=NULL) {
   if (is_dir($project_name)) {
     exit('The directory is not empty. Aborting project creation...');
   } else {
-    drush_print('I am cloning the repository into your machine, it can take a bit of time');
+    drush_print(sprintf(COLOR_MSG_INFO,'[ Cloning the repository into your machine. It can take a bit of time ]'));
     drush_shell_exec_interactive('git clone ' . $git_repository . ' ' . $project_name);
-    drush_print('Checkout master...');
+    drush_print(sprintf(COLOR_MSG_INFO,'[ Checkout master ]'));
     drush_shell_exec_interactive('cd ' . $project_name . ' && git checkout master');
     drush_shell_exec_interactive('cd ' . $project_name . ' && git branch');
   }
 
   // Check if project is based on makefiles
   if (is_dir("$project_name/makefiles")) {
-    drush_print('Building project based on makefiles');
+    drush_print(sprintf(COLOR_MSG_INFO,'[ Building project based on makefiles ]'));
     drush_shell_exec_interactive ('drush dl drupal  --destination=' . $project_name . ' --drupal-project-rename=httpdocs --cache');
     drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && git checkout .');
     drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && drush make --no-core ../makefiles/base.make --yes');
     drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && drush make --no-core ../makefiles/contrib.make --yes');
     drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && drush make --no-core ../makefiles/devel.make --yes');
   } else {
-    drush_print('Building project without makefiles');
+    drush_print(sprintf(COLOR_MSG_INFO,'[ Building project without makefiles ]'));
     $old_site = TRUE;
   }
 
   $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
 
-  drush_print ('Now enter some parameters for the development site, please');
+  drush_print (sprintf(COLOR_MSG_INFO,'[ Now enter some parameters for the development site, please ]'));
   $admin_pass = drush_prompt("The admin password (secret password if blank)", $random);
   $site_name = drush_prompt("The name of the website, please (Project Name will be used if blank)",$project_name);
   $site_email = drush_prompt("Sites email (my@example.com if blank)",'my@example.com');
@@ -61,8 +61,13 @@ function drush_newton_join2project($url=NULL) {
 
   $synchronize = drush_prompt("Synchronize from pre?",'yes');
   if ($synchronize == 'yes') {
-    drush_shell_exec_interactive("cd $project_name/httpdocs && drush traepaca");
+    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush traepaca");
+    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush updb");
+  } else {
+    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local");
   }
-  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local");
-  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush updb");
+
+  drush_print (sprintf(COLOR_MSG_OK, '---------------------------'));
+  drush_print (sprintf(COLOR_MSG_OK, '- Have a nice Drupal day! -'));
+  drush_print (sprintf(COLOR_MSG_OK, '---------------------------'));
 }
