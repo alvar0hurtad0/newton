@@ -73,9 +73,9 @@ function drush_newton_join2project($url=NULL) {
   if ($synchronize == 'yes') {
     drush_shell_exec_interactive ("cd $project_name/httpdocs && drush traepaca --yes");
     drush_shell_exec_interactive ("cd $project_name/httpdocs && drush updb --yes");
+  } else {
+    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local --yes");
   }
-
-  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local --yes");
 
   drush_print (sprintf(COLOR_MSG_OK, '---------------------------'));
   drush_print (sprintf(COLOR_MSG_OK, '- Have a nice Drupal day! -'));

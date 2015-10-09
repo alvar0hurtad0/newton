@@ -62,7 +62,7 @@ function newton_drush_command() {
       'URL' => 'The URL indicator',
     ),
     'options' => array (
-      'confirm' => 'Ask confirmation on every step'
+      'confirm' => 'Ask confirmation on every step',
     ),
     'requiered-arguments' => FALSE,
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
