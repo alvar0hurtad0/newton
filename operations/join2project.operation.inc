@@ -31,9 +31,7 @@ function drush_newton_join2project($url=NULL) {
   // Check if project is based on makefiles
   if (is_dir("$project_name/makefiles")) {
     drush_print(sprintf(COLOR_MSG_INFO,'[ Building project based on makefiles ]'));
-    drush_shell_exec_interactive ('drush dl drupal  --destination=' . $project_name . ' --drupal-project-rename=httpdocs --cache');
-    drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && git checkout .');
-    drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && drush make --no-core ../makefiles/contrib.make --yes');
+    drush_shell_exec_interactive('cd ' . $project_name . '/httpdocs && drush make ../makefiles/contrib.make --yes');
   } else {
     drush_print(sprintf(COLOR_MSG_INFO,'[ Building project without makefiles ]'));
     $old_site = TRUE;
@@ -41,7 +39,6 @@ function drush_newton_join2project($url=NULL) {
 
   $random = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 7);
 
-  $confirm = drush_get_option('confirm');
   if ($confirm){
     drush_print (sprintf(COLOR_MSG_INFO,'[ Now enter some parameters for the development site, please ]'));
     $admin_pass = drush_prompt("The admin password (secret password if blank)", $random);
@@ -52,9 +49,10 @@ function drush_newton_join2project($url=NULL) {
     $database_user_pw = drush_prompt("Database user PASSWORD for this project (secret password if blank)",$random);
     $database_root = drush_prompt("Database super-user (root if blank)",'root');
     $database_root_pw = drush_prompt("Database super-user password (root if blank)",'root');
-    $synchronize = drush_prompt("Synchronize from pre?",'yes');
+    $synchronize = drush_prompt("Synchronize from pre?",'yes / no');
   }
   else {
+    drush_print(sprintf(COLOR_MSG_INFO,'[ Starting unattended installation. Wait and enjoy! ]'));
     $admin_pass = $random;
     $site_name = $project_name;
     $site_email = 'my@example.com';
@@ -64,18 +62,22 @@ function drush_newton_join2project($url=NULL) {
     $database_root_pw = 'root';
     $synchronize = 'yes';
   }
+
   if ($old_site) {
     drush_shell_exec_interactive("cd $project_name/httpdocs && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$profile_name --yes");
   } else {
     drush_shell_exec_interactive("cd $project_name/httpdocs && drush site-install $profile_name --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$profile_name --yes");
   }
-
+  
   if ($synchronize == 'yes') {
-    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush traepaca --yes");
+    drush_print(sprintf(COLOR_MSG_INFO,'[ Synchronizing BD from preproduction server. Wait and relax! ]'));
+    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush sql-drop --yes");
+    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush sql-sync @default.pre default -v --yes");
     drush_shell_exec_interactive ("cd $project_name/httpdocs && drush updb --yes");
-  } else {
-    drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local --yes");
   }
+  
+  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local --yes");
+  drush_shell_exec_interactive ("cd $project_name/httpdocs && drush registry-rebuild @default.local --yes");
 
   drush_print (sprintf(COLOR_MSG_OK, '---------------------------'));
   drush_print (sprintf(COLOR_MSG_OK, '- Have a nice Drupal day! -'));
