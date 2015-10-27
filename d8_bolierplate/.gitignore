@@ -1,0 +1,5 @@
+# ignore drupal directory
+drupal/
+# ignore composer generated files
+composer.lock
+vendor/

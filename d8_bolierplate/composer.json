@@ -1,0 +1,78 @@
+{
+  "name": "aspgems/[project_name]",
+  "description": "Composer file for [project_name] project",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "http://drupal-packagist.webflo.io/"
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "aspgems/patches",
+        "version": "1.0.0",
+        "type": "patches",
+        "require": {
+          "netresearch/composer-patches-plugin": "~1.0"
+        },
+        "extra": {
+          "patches": {
+            "drupal/smtp": {
+              "8.1.x-dev": {
+                "7a14d102049b835205567b8ccf7b15835e484ef4": {
+                  "title": "Non-HTML emails not working in D8",
+                  "url": "https://www.drupal.org/files/issues/non_html_emails_not-2557041-4.patch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "package",
+      "package": {
+        "name": "drupal/core",
+        "version": "8.0.0-rc2",
+        "type": "drupal-core",
+        "dist": {
+          "url": "http://ftp.drupal.org/files/projects/drupal-8.0.0-rc2.tar.gz",
+          "type": "tar"
+        }
+      }
+    }
+  ],
+  "require": {
+    "davidbarratt/custom-installer": "dev-master",
+    "derhasi/composer-preserve-paths": "0.1.*",
+    "aspgems/patches": "*",
+    "drupal/core": "8.0.0-rc2"
+ },
+  "require-dev": {
+    "drupal/smtp": "8.1.x-dev#7a14d102049b835205567b8ccf7b15835e484ef4"
+  },
+  "config": {
+    "vendor-dir": "vendor"
+  },
+  "extra": {
+    "custom-installer": {
+      "drupal-module": "drupal/modules/contrib/{$name}/",
+      "drupal-theme": "drupal/themes/contrib/{$name}/",
+      "drupal-library": "drupal/libraries/{$name}/",
+      "drupal-drush": "drush/{$name}/",
+      "drupal-profile": "drupal/profiles/{$name}/",
+      "drupal-core": "drupal/"
+    },
+    "preserve-paths": [
+      "drupal/modules/contrib",
+      "drupal/modules/custom",
+      "drupal/modules/features",
+      "drupal/themes/contrib",
+      "drupal/themes/custom",
+      "drupal/libraries",
+      "drush",
+      "drupal/sites/default/settings.php",
+      "drupal/sites/default/files"
+    ]
+  }
+}
