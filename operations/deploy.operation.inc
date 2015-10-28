@@ -5,7 +5,7 @@
 function drush_newton_deploy($environment='pre') {
   global $green;
   $merge = drush_prompt("merge before?",'yes');
-  if ($merge = 'yes') {
+  if ($merge == 'yes') {
     switch ($environment) {
       case 'pre':
         $previous_branch = 'master';
