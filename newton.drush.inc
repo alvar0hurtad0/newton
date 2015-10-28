@@ -1,6 +1,14 @@
 <?php
 
 /**
+ * @file
+ * Functions of newton.
+ */
+
+// helpers
+
+
+/**
  * Implementation of hook_drush_command()
  */
 function newton_drush_command() {
@@ -73,7 +81,7 @@ function newton_drush_command() {
       'environment' => 'The environment indicator',
     ),
     'required-arguments' => FALSE,
-    'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
   );
   $items['n-revert'] = array(
     'description' => 'shows all overriden features on the portal and ask about revert then',

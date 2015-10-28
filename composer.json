@@ -1,0 +1,6 @@
+{
+    "name": "aspgems/newton",
+    "require": {
+      "symfony/yaml": 2.2
+    }
+}

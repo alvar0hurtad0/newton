@@ -2,6 +2,8 @@
 /**
  * deploy command callback.
  */
+
+  use Symfony\Component\Yaml\Parser;
 function drush_newton_deploy($environment='pre') {
   global $green;
   $merge = drush_prompt("merge before?",'yes');
@@ -73,4 +75,30 @@ function drush_newton_deploy($environment='pre') {
     }
   }
   drush_shell_exec_interactive('drush @default.'.$environment.' ssh "git pull origin '.$environment.'"');
+
+// get rebuild info and rebuild remote.  
+  $site_root = drush_get_context('DRUSH_SELECTED_DRUPAL_ROOT');
+  $overrides_path = $site_root . '/../rebuild_info/' . $environment . '_rebuild.yml';
+  $overrides_content = @file_get_contents($overrides_path);
+  
+  if ($overrides_content){
+    $yaml = new Parser();
+    $configuration_changes = $yaml->parse($overrides_content);
+
+    if (isset($configuration_changes['drupal']['modules']['enable'])) {
+      $modules_enable = implode("," , $configuration_changes['drupal']['modules']['enable']);
+      drush_shell_exec_interactive ('drush @default.'.$environment.' pm-enable ' . $modules_enable . ' --yes');
+    }
+
+    if (isset($configuration_changes['drupal']['modules']['disable'])){
+      $modules_disable = implode(", " , $configuration_changes['drupal']['modules']['disable']);
+      drush_shell_exec_interactive ('drush @default.'.$environment.' pm-disable ' . $modules_disable . ' --yes');
+    }
+
+    if (isset($configuration_changes['drupal']['variables']['set'])){
+      foreach ($configuration_changes['drupal']['variables']['set'] as $key => $value) {
+        drush_shell_exec_interactive ('drush @default.'.$environment.' vset ' . $key . ' ' . $value );
+      }
+    }
+  }
 }
