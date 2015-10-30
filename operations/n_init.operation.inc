@@ -21,7 +21,7 @@ function drush_newton_n_init() {
 
   // Copying default makefiles
   drush_print (sprintf(COLOR_MSG_INFO, '[ Copying default makefiles ]'));
-  drush_shell_exec_interactive('cp ' . NEWTON_PATH . '/makefiles/default.contrib.make ' . $project_name . '/makefiles/contrib.make');
+  drush_shell_exec_interactive('cp ' . NEWTON_PATH . '/d7_bolierplate/makefiles/default.contrib.make ' . $project_name . '/makefiles/contrib.make');
 
   // Building project
   drush_print (sprintf(COLOR_MSG_INFO, '[ Building project ]'));
@@ -30,17 +30,17 @@ function drush_newton_n_init() {
   // Copy gitignore
   drush_print (sprintf(COLOR_MSG_INFO, '[ Creating gitignore ]'));
   drush_print ('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/.gitignore');
-  drush_shell_exec_interactive('cp ' . NEWTON_PATH . '/default.gitignore ' . $project_name . '/.gitignore');
+  drush_shell_exec_interactive('cp ' . NEWTON_PATH . '/d7_bolierplate/default.gitignore ' . $project_name . '/.gitignore');
   drush_shell_exec('sed -i \'s/\[base.profile\]/' . $profile_name . '/\' ' .$project_name. '/.gitignore');
 
   // Copy rebuild info for environment
   drush_print (sprintf(COLOR_MSG_INFO, '[ Copying rebuild info ]'));
-  drush_shell_exec_interactive('cp ' . NEWTON_PATH . '/rebuild_info/* ' . $project_name . '/rebuild_info/');
+  drush_shell_exec_interactive('cp ' . NEWTON_PATH . '/d7_bolierplate/rebuild_info/* ' . $project_name . '/rebuild_info/');
 
   // Creating instalation profile
   drush_print (sprintf(COLOR_MSG_INFO, '[ Creating instalation profile ]'));
   drush_shell_exec('mkdir -p '.$project_name.'/httpdocs/profiles/' . $profile_name);
-  drush_shell_exec_interactive('cp -r ' . NEWTON_PATH . '/base.profile/* ' . $project_name . '/httpdocs/profiles/' . $profile_name);
+  drush_shell_exec_interactive('cp -r ' . NEWTON_PATH . '/d7_bolierplate/base.profile/* ' . $project_name . '/httpdocs/profiles/' . $profile_name);
   drush_shell_exec('mv ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/base.profile.info ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.info');
   drush_shell_exec('mv ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/base.profile.profile ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.profile');
   drush_shell_exec('mv ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/base.profile.install ' . $project_name . '/httpdocs/profiles/' . $profile_name . '/' . $profile_name . '.install');
@@ -77,7 +77,7 @@ function drush_newton_n_init() {
 
   // copy drush config and build developmet environment
   drush_print (sprintf(COLOR_MSG_INFO, '[ Initializing drush alias ]'));
-  drush_shell_exec_interactive('cp -r ' . NEWTON_PATH . '/drush ' . $project_name);
+  drush_shell_exec_interactive('cp -r ' . NEWTON_PATH . '/d7_bolierplate/drush ' . $project_name);
   drush_shell_exec('sed -i \'s/\[project-name\]/' . $project_name . '/\' ' .$project_name. '/drush/aliases/default.aliases.drushrc.php');
   drush_shell_exec_interactive ("cd $project_name/httpdocs && drush rebuild @default.local");
 
