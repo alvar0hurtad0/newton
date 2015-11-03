@@ -101,4 +101,8 @@ function drush_newton_deploy($environment='pre') {
       }
     }
   }
+  drush_shell_exec_interactive('drush @default.'.$environment.' features-revert-all --yes --force');
+  drush_shell_exec_interactive('drush @default.'.$environment.' cache-clear all'); 
+  drush_shell_exec_interactive('drush @default.'.$environment.' updatedb --yes');
+  drush_shell_exec_interactive('drush @default.'.$environment.' cache-clear all');
 }
