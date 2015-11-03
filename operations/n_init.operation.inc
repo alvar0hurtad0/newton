@@ -20,7 +20,7 @@ function drush_newton_n_init() {
   drush_shell_exec('mkdir '.$project_name.'/rebuild_info');
 
   // Copying default makefiles
-  drush_print (sprintf(COLOR_MSG_INFO, '[ Copying default makefiles ]'));
+  drush_print (sprintf(COLOR_MSG_INFO, '[ Copying default makefile ]'));
   drush_shell_exec_interactive('cp ' . NEWTON_PATH . '/d7_bolierplate/makefiles/default.contrib.make ' . $project_name . '/makefiles/contrib.make');
 
   // Building project
