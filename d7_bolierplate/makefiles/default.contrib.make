@@ -46,13 +46,14 @@ projects[] = omega
 
 ; +++++ libraries +++++
 
-libraries[htmlpurifier][download] = get
+libraries[htmlpurifier][download][type] = get
 libraries[htmlpurifier][download][url] = http://htmlpurifier.org/releases/htmlpurifier-4.7.0.zip
 libraries[htmlpurifier][destination] = libraries
 libraries[htmlpurifier][directory_name] = htmlpurifier
 
-libraries[ckeditor][download] = get
+libraries[ckeditor][download][type] = get
 libraries[ckeditor][download][url] = http://download.cksource.com/CKEditor/CKEditor/CKEditor%204.5.3/ckeditor_4.5.3_standard.zip
+libraries[ckeditor][destination] = libraries
 libraries[ckeditor][directory_name] = ckeditor
-libraries[ckeditor] = library
+
 
