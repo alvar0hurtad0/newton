@@ -22,7 +22,7 @@ function drush_newton_deploy($environment = 'pre') {
     }
     $profile_path = drush_get_option('custom-profile-path');
     if (isset($profile_path)) {
-      drush_shell_exec_interactive('sudo chown vagrant ' . $profile_path . '-R');
+      drush_shell_exec_interactive('sudo chown vagrant ' . $profile_path . ' -R');
     }
     drush_print(sprintf($green, dt('git checkout ' . $previous_branch)));
     drush_shell_exec_interactive('git checkout ' . $previous_branch);

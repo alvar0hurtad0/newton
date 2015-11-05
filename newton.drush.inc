@@ -5,18 +5,15 @@
  * Functions of newton.
  */
 
-// helpers
-
-
 /**
- * Implementation of hook_drush_command()
+ * Implements hook_drush_command().
  */
 function newton_drush_command() {
   $items['newton'] = array(
     'description' => 'Shows all newton commands',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-  $items['initfeature']= array(
+  $items['initfeature'] = array(
     'description' => 'Create a new task',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
@@ -24,10 +21,9 @@ function newton_drush_command() {
     'description' => 'Ends a task',
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
-  $items['generate_history']=array(
+  $items['generate_history'] = array(
     'description' => 'Creates a file with statistical data on the task in json',
-    'arguments' => array ('csv' => 'If the filetype you want to use is csv'
-    ),
+    'arguments' => array('csv' => 'If the filetype you want to use is csv'),
     'required-arguments' => FALSE,
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
   );
@@ -66,10 +62,10 @@ function newton_drush_command() {
   );
   $items['join2project'] = array(
     'description' => 'ask about cuestions for joining existing project',
-    'arguments' => array (
+    'arguments' => array(
       'URL' => 'The URL indicator',
     ),
-    'options' => array (
+    'options' => array(
       'confirm' => 'Ask confirmation on every step',
     ),
     'requiered-arguments' => FALSE,
@@ -100,7 +96,7 @@ function newton_drush_command() {
   $items['n-snapshot'] = array(
     'description' => 'takes a snapshot of current database associated to the current commit id',
     'required-arguments' => FALSE,
-        'arguments' => array(
+    'arguments' => array(
       'environment' => 'The environment indicator',
     ),
     'bootstrap' => DRUSH_BOOTSTRAP_DRUSH,
@@ -124,7 +120,7 @@ function newton_drush_command() {
       'make-devel' => 'Run devel.make',
       'make-all' => 'Download core and run all makefiles',
       'reinstall' => 'Reinstall the current profile',
-      'yes' => 'Yes to all in operations'
+      'yes' => 'Yes to all in operations',
     ),
   );
   $items['addfuncionality'] = array(
@@ -135,20 +131,20 @@ function newton_drush_command() {
   return $items;
 }
 
-include ('includes/constants.includes.inc');
-include ('operations/newton.operation.inc');
-include ('operations/initfeature.operation.inc');
-include ('operations/endfeature.operation.inc');
-include ('operations/generate_history.operation.inc');
-include ('operations/n_init.operation.inc');
-include ('operations/deploy.operation.inc');
-include ('operations/capasao.operation.inc');
-include ('operations/join2project.operation.inc');
-include ('operations/traepaca.operation.inc');
-include ('operations/tirapapre.operation.inc');
-include ('operations/newtonupdate.operation.inc');
-include ('operations/n_revert.operation.inc');
-include ('operations/n_rollback.operation.inc');
-include ('operations/n_snapshot.operation.inc');
-include ('operations/n_rebuild.operation.inc');
-include ('operations/addfuncionality.operation.inc');
+include 'includes/constants.includes.inc';
+include 'operations/newton.operation.inc';
+include 'operations/initfeature.operation.inc';
+include 'operations/endfeature.operation.inc';
+include 'operations/generate_history.operation.inc';
+include 'operations/n_init.operation.inc';
+include 'operations/deploy.operation.inc';
+include 'operations/capasao.operation.inc';
+include 'operations/join2project.operation.inc';
+include 'operations/traepaca.operation.inc';
+include 'operations/tirapapre.operation.inc';
+include 'operations/newtonupdate.operation.inc';
+include 'operations/n_revert.operation.inc';
+include 'operations/n_rollback.operation.inc';
+include 'operations/n_snapshot.operation.inc';
+include 'operations/n_rebuild.operation.inc';
+include 'operations/addfuncionality.operation.inc';
