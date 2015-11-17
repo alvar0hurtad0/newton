@@ -19,3 +19,5 @@ drupal:
       preprocess_js: 0
       preprocess_css: 0
       admin_theme: adminimal
+      reroute_email_address: 'drupales@aspgems.com'
+      reroute_email_enable: 1   
