@@ -1,8 +1,12 @@
 <?php
 /**
- * capasao command callback.
+ * @file
+ * Operation capasao.
  */
-function drush_newton_capasao($number = null) 
-{
-    drush_shell_exec_interactive("git log --graph --pretty=oneline --abbrev-commit --decorate --all $*");
+
+/**
+ * Capasao command callback.
+ */
+function drush_newton_capasao() {
+  drush_shell_exec_interactive("git log --graph --pretty=oneline --abbrev-commit --decorate --all $*");
 }
