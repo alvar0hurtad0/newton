@@ -30,13 +30,10 @@ projects[] = smtp
 projects[] = views_bulk_operations
 projects[] = admin_views
 
-projects[] = devel
 projects[] = fpa
-projects[] = stage_file_proxy
 projects[] = coffee
 projects[] = diff
 projects[] = features_diff
-projects[] = reroute_email
 projects[] = module_filter
 
 ; +++++ themes +++++
