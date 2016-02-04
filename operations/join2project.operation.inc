@@ -71,20 +71,19 @@ function drush_newton_join2project($url = NULL) {
 
   if ($old_site) {
     drush_shell_exec_interactive("cd $project_name/httpdocs && drush site-install minimal --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$profile_name --yes");
-  }
-  else {
+  } else {
     drush_shell_exec_interactive("cd $project_name/httpdocs && drush site-install $profile_name --site-name=$site-name --account-pass=$admin_pass --db-su=$database_root --db-su-pw=$database_root_pw --db-url=mysql://$database_user:$database_user_pw@localhost/local_$profile_name --yes");
   }
 
   if ($synchronize == 'yes') {
     drush_print(sprintf(COLOR_MSG_INFO, '[ Synchronizing BD from preproduction server. Wait and relax! ]'));
     drush_shell_exec_interactive("cd $project_name/httpdocs && drush sql-drop --yes");
-    drush_shell_exec_interactive("cd $project_name/httpdocs && drush sql-sync @default.pre default -v --yes");
+    drush_shell_exec_interactive("cd $project_name/httpdocs && drush6 sql-sync @default.pre @default.local --yes");
     drush_shell_exec_interactive("cd $project_name/httpdocs && drush updb --yes");
   }
 
-  drush_shell_exec_interactive("cd $project_name/httpdocs && drush rebuild @default.local --yes");
-  drush_shell_exec_interactive("cd $project_name/httpdocs && drush registry-rebuild @default.local --yes");
+  drush_shell_exec_interactive("cd $project_name/httpdocs && drush @default.local rebuild --yes");
+  //drush_shell_exec_interactive("cd $project_name/httpdocs && drush registry-rebuild @default.local --yes");
 
   drush_print(sprintf(COLOR_MSG_OK, '---------------------------'));
   drush_print(sprintf(COLOR_MSG_OK, '- Have a nice Drupal day! -'));
